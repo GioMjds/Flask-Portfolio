@@ -11,6 +11,7 @@ import Portfolio from "./sections/Portfolio"
 import Contact from "./sections/Contact"
 import Certificates from "./sections/Certificates"
 import Login from "./pages/Login";
+import Profile from "./pages/Profile";
 import { AuthProvider, useAuth } from "./contexts/AuthContext"
 
 const App = () => {
@@ -46,6 +47,7 @@ const MainContent = ({ isDesktop, isTablet, isMobile }) => {
           <Route path="/certificates" element={isAuthenticated ? <Certificates id="certificates" /> : <Login />} />
           <Route path="/portfolio" element={isAuthenticated ? <Portfolio id="portfolio" /> : <Login />} />
           <Route path="/contact" element={isAuthenticated ? <Contact id="contact" /> : <Login />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/login" element={<Login />} />
         </Routes>
       </main>
