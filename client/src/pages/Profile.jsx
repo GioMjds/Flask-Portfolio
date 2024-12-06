@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 
 const Profile = () => {
   const [profile, setProfile] = useState(null);
@@ -8,10 +7,15 @@ const Profile = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/profile');
-        setProfile(response.data);
+        const response = await fetch('http://127.0.0.1:5000/profile')
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setProfile(data);
       } catch (error) {
         console.error('Error fetching data:', error);
+        setProfile(null);
       } finally {
         setLoading(false);
       }
@@ -24,8 +28,8 @@ const Profile = () => {
 
   return (
     <div>
-      <h1>{profile[0]}</h1>
-      <p>{profile.firstName}</p>
+      <h1>Student ID: {profile['studentID']}</h1>
+      <h1>Student ID: {profile['lastName']}</h1>
     </div>
   )
 }

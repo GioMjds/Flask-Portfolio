@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
-import { Certs as certs } from '../components/Data';
 import ModalBox from '../components/ModalBox';
+import Certs from '../constants/Certs';
 import '../scss/certificates.scss';
 
 const Certificates = () => {
@@ -14,7 +14,7 @@ const Certificates = () => {
             <section className="certificates container section" id="certificates">
                 <h2 className="section-title" data-aos="fade-right">My Certificates</h2>
                 <div className='certificate grid'>
-                    {certs.map((cert, index) => (
+                    {Certs.map((cert, index) => (
                         <motion.div
                             key={index}
                             className="certificate-card"
@@ -36,7 +36,11 @@ const Certificates = () => {
             </section>
             <AnimatePresence>
                 {selectedCert && (
-                    <ModalBox project={selectedCert} onClose={closeModal} btnLabel="View Certificate Issue" />
+                    <ModalBox
+                        project={selectedCert}
+                        onClose={closeModal}
+                        btnLabel="View Certificate Issue"
+                    />
                 )};
             </AnimatePresence>
         </>

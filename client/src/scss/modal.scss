@@ -1,5 +1,18 @@
 @use '../index.scss' as *;
 
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
 .modal-content {
     background: $container-color;
     border-radius: $border-radius;
@@ -33,6 +46,10 @@
         margin-bottom: 1.5rem;
     }
 
+    .modal-text {
+        margin-bottom: 2rem;
+    }
+
     .modal-buttons {
         display: flex;
         justify-content: space-evenly;
@@ -62,6 +79,28 @@
     
             &:hover {
                 background: mix($first-color, black, 60%);
+            }
+        }
+
+        .modal-confirm {
+            background-color: hsl(0, 86%, 48%);
+            padding: 1rem;
+            border-radius: $border-radius;
+            color: $container-color;
+
+            &:hover {
+                background-color: hsl(0, 86%, 38%);
+            }
+        }
+
+        .modal-cancel {
+            background-color: darken($color: $body-color, $amount: 45);
+            padding: 1rem;
+            border-radius: $border-radius;
+            color: $container-color;
+
+            &:hover {
+                background-color: darken($color: $body-color, $amount: 60);
             }
         }
     }

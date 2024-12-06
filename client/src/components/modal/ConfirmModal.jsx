@@ -34,7 +34,7 @@ const ConfirmModal = ({ onConfirm, onClose, prompt }) => {
             animate={{ scale: 1 }}
             exit={{ scale: 0.8 }}
         >
-            <h2>{prompt}</h2>
+            <h2 className="modal-text">{prompt}</h2>
             <div className="modal-buttons">
                 <motion.button
                     className="modal-confirm"

@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react/prop-types */
 import { createContext, useContext, useState } from "react";
 
@@ -18,7 +19,24 @@ export const MyProvider = ({ children }) => {
 
     return (
         <MyContext.Provider
-            value={{ toggleUp, setToggleUp, isAuthenticated, setIsAuthenticated, userDetails, setUserDetails, session, setSession, toggleLog, setToggleLog, toggleSesh, setToggleSesh, result, setResult, runTimer, setRunTimer }}
+            value={{
+                toggleUp,
+                setToggleUp,
+                isAuthenticated,
+                setIsAuthenticated,
+                userDetails,
+                setUserDetails,
+                session,
+                setSession,
+                toggleLog,
+                setToggleLog,
+                toggleSesh,
+                setToggleSesh,
+                result,
+                setResult,
+                runTimer,
+                setRunTimer
+            }}
         >
             {children}
         </MyContext.Provider>

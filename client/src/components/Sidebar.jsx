@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import "../scss/sidebar.scss";
 import ConfirmModal from "./modal/ConfirmModal";
 import LogOut from "./LogOut";
@@ -13,50 +13,34 @@ const Sidebar = () => {
         document.body.classList.toggle('no-scroll', toggle);
     }, [toggle]);
 
-    const handleNav = (id) => {
-        showMenu(false);
-        const element = document.getElementById(id);
-        if (element) element.scrollIntoView({ behavior: 'smooth' });
-    };
-
     return (
         <>
             <aside className={toggle ? "aside show-menu" : "aside"}>
-                <NavLink to='/home' onClick={() => handleNav('home')} >
+                <Link to='/profile' >
                     <h1 className='logo-name'>G</h1>
-                </NavLink>
+                </Link>
 
                 <nav className="nav">
                     <div className="nav-menu">
                         <ul className="nav-list">
                             <li className="nav-item">
-                                <NavLink to="/home" className="nav-link" onClick={() => handleNav('home')}>
-                                    <i className="icon-home"></i>
+                                <NavLink to="/" className="nav-link">
+                                    <i className="fas fa-house"></i>
                                 </NavLink>
                             </li>
                             <li className="nav-item">
-                                <NavLink to="/about" className="nav-link" onClick={() => handleNav('about')}>
-                                    <i className="icon-user-following"></i>
+                                <NavLink to="/blog" className="nav-link">
+                                    <i className="fas fa-layer-group"></i>
                                 </NavLink>
                             </li>
                             <li className="nav-item">
-                                <NavLink to="/resume" className="nav-link" onClick={() => handleNav('resume')}>
-                                    <i className="icon-graduation"></i>
+                                <NavLink to="/certificates" className="nav-link">
+                                    <i className="fas fa-certificate"></i>
                                 </NavLink>
                             </li>
                             <li className="nav-item">
-                                <NavLink to="/certificates" className="nav-link" onClick={() => handleNav('certificates')}>
-                                    <i className="icon-badge"></i>
-                                </NavLink>
-                            </li>
-                            <li className="nav-item">
-                                <NavLink to="/projects" className="nav-link" onClick={() => handleNav('projects')}>
-                                    <i className="icon-layers"></i>
-                                </NavLink>
-                            </li>
-                            <li className="nav-item">
-                                <NavLink to="/contact" className="nav-link" onClick={() => handleNav('contact')}>
-                                    <i className="icon-bubble"></i>
+                                <NavLink to="/profile" className="nav-link">
+                                    <i className="fas fa-user"></i>
                                 </NavLink>
                             </li>
                             <li className="nav-item">

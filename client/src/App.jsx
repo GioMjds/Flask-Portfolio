@@ -2,18 +2,16 @@
 import AOS from "aos"
 import { useEffect } from "react"
 import { useMediaQuery } from "react-responsive"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
 import './App.scss'
 import Sidebar from "./components/Sidebar"
 import { MyProvider, useMyContext } from "./contexts/MyContext"
 import ProtectedRoutes from "./contexts/ProtectedRoutes"
+import Home from "./pages/Home"
 import Login from "./pages/Login"
 import Profile from "./pages/Profile"
-import About from "./sections/About"
-import Certificates from "./sections/Certificates"
-import Contact from "./sections/Contact"
-import Home from "./sections/Home"
 import Projects from "./sections/Projects"
-import Resume from "./sections/Resume"
+import Certificates from "./sections/Certificates"
 
 const App = () => {
   AOS.init({
@@ -27,7 +25,9 @@ const App = () => {
 
   return (
     <MyProvider>
-      <MainContent isDesktop={isDesktop} isTablet={isTablet} isMobile={isMobile} />
+      <BrowserRouter>
+        <MainContent isDesktop={isDesktop} isTablet={isTablet} isMobile={isMobile} />
+      </BrowserRouter>
     </MyProvider>
   )
 }
@@ -41,27 +41,27 @@ const MainContent = ({ isDesktop, isTablet, isMobile }) => {
     if (session) {
       setIsAuthenticated(true);
     }
-  }, []);
+  }, [setIsAuthenticated]);
 
   return (
     <>
-      <main className={`main ${isMobile ? "mobile" : ""} ${isTablet ? "tablet" : ""} ${isDesktop ? "desktop" : ""}`}>
-        {isAuthenticated ? (
-          <>
-            <Sidebar />
+      {isAuthenticated ? (
+        <>
+          <Sidebar />
+          <main className={`main ${isMobile ? "mobile" : ""} ${isTablet ? "tablet" : ""} ${isDesktop ? "desktop" : ""}`}>
             <ProtectedRoutes isAuthenticated={isAuthenticated}>
-              <Home id="home" />
-              <About id="about" />
-              <Resume id="resume" />
-              <Certificates id="certificates" />
-              <Projects id="projects" />
-              <Contact id="contact" />
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/blog" element={<Projects />} />
+                <Route path="/certificates" element={<Certificates />} />
+                <Route path="/profile" element={<Profile />} />
+              </Routes>
             </ProtectedRoutes>
-          </>
-        ) : (
-          <Login />
-        )}
-      </main>
+          </main>
+        </>
+      ) : (
+        <Login />
+      )}
     </>
   )
 }

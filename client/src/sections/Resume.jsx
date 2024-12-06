@@ -1,6 +1,6 @@
-import "../scss/resume.scss";
-import { Data } from "../components/Data";
 import Card from "../components/Card";
+import Data from "../constants/Data";
+import "../scss/resume.scss";
 
 const Resume = () => {
   return (
@@ -18,14 +18,14 @@ const Resume = () => {
                   year={val.year}
                   desc={val.desc}
                 />
-              ) 
+              )
             }
           })}
         </div>
         <div className="timeline grid" data-aos="fade-left">
           {Data.map((val, index) => {
             if (val.category === "experience") {
-              return(
+              return (
                 <Card
                   key={index}
                   icon={val.icon}
@@ -33,7 +33,7 @@ const Resume = () => {
                   year={val.year}
                   desc={val.desc}
                 />
-              ) 
+              )
             }
           })}
         </div>

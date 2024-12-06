@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from "react";
-import Menu from '../components/Menu';
 import ModalBox from "../components/ModalBox";
+import Menu from '../constants/Menu';
 import "../scss/projects.scss";
 
 const Projects = () => {
@@ -25,9 +25,9 @@ const Projects = () => {
         <h2 className="section-title" data-aos="fade-right">Python Activities</h2>
         <div className="work-filters">
           <span className="work-item" onClick={() => setItems(Menu)}>All</span>
-          <span className="work-item" onClick={() => filterItem("Python")}>Prelim</span>
-          <span className="work-item" onClick={() => filterItem("JavaScript")}>Midterm</span>
-          <span className="work-item" onClick={() => filterItem("React")}>Finals</span>
+          <span className="work-item" onClick={() => filterItem("Prelim")}>Prelim</span>
+          <span className="work-item" onClick={() => filterItem("Midterm")}>Midterm</span>
+          <span className="work-item" onClick={() => filterItem("Finals")}>Finals</span>
         </div>
         <div className="work-container grid">
           {items.length > 0 ? (
@@ -62,7 +62,11 @@ const Projects = () => {
       </section>
       <AnimatePresence>
         {selectedProject && (
-          <ModalBox project={selectedProject} onClose={closeModal} btnLabel="Go To GitHub Repo" />
+          <ModalBox 
+            project={selectedProject} 
+            onClose={closeModal} 
+            btnLabel="Google Colab Link" 
+          />
         )}
       </AnimatePresence>
     </>

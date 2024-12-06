@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ConfirmModal from "./modal/ConfirmModal";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useMyContext } from "../contexts/MyContext";
 
 const LogOut = () => {
@@ -37,19 +37,19 @@ const LogOut = () => {
 
     return (
         <>
-            <button
+            <NavLink
                 className="nav-link"
                 onClick={openModal}
                 style={{ color: 'red' }}
             >
                 <i className="icon-logout"></i>
-            </button>
+            </NavLink>
 
             {showLogoutModal && (
                 <ConfirmModal
                     onClose={closeModal}
                     onConfirm={handleLogout}
-                    prompt={'Are you sure you want to log out?'}
+                    prompt='Are you sure you want to log out?'
                 />
             )}
         </>

@@ -1,1 +1,69 @@
 @use '../index.scss' as *;
+
+.login-section {
+    background-color: $container-color;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    background-color: $body-color;
+    border-radius: $border-radius;
+    box-shadow: $shadow;
+}
+
+.login-header {
+    padding: 1.5rem;
+    text-align: center;
+
+    h2 {
+        font-size: $h1-font-size;
+        color: $title-color;
+    }
+}
+
+.login-form {
+    padding: 1.5rem;
+
+    .form-group {
+        margin-bottom: 1rem;
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: $normal-font-size;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid $text-color;
+            border-radius: 10px;
+            font-size: $normal-font-size;
+        }
+
+        .error-msg {
+            color: hsl(0, 83%, 45%);
+            font-size: $small-font-size;
+        }
+    }
+
+    .login-btn {
+        width: 100%;
+        padding: 0.5rem;
+        border: none;
+        border-radius: $border-radius;
+        font-size: $normal-font-size;
+        background-color: $first-color;
+        color: $body-color;
+        cursor: pointer;
+
+        &:hover {
+            background-color: darken($color: $first-color, $amount: 10);
+        }
+    }
+}

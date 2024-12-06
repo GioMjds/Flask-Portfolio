@@ -19,7 +19,7 @@ const Login = () => {
                 .min(3, 'Must be 3 characters or more')
                 .required('Username is required'),
             password: Yup.string()
-                .min(8, 'Must be 8 characters or more')
+                .min(5, 'Must be 5 characters or more')
                 .required('Password is required'),
         }),
         onSubmit: async (values) => {
@@ -35,9 +35,8 @@ const Login = () => {
                 if (response.ok) {
                     const data = await response.json();
                     localStorage.setItem('session_id', data.session_id);
-                    console.log(`Login successful: ${data.session_id}`);
                     setIsAuthenticated(true);
-                    navigate('/home');
+                    navigate('/');
                 } else {
                     const error = await response.json();
                     alert(error.message);
@@ -49,38 +48,48 @@ const Login = () => {
         }
     });
     return (
-        <div className="login-container">
-            <h2>Login</h2>
-            <form onSubmit={formik.handleSubmit}>
-                <div>
-                    <label htmlFor="username">Username:</label>
-                    <input
-                        type="text"
-                        name="username"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.username}
-                    />
-                    {formik.touched.username && formik.errors.username ? (
-                        <div>{formik.errors.username}</div>
-                    ) : null}
+        <section className="login-section">
+            <div className="login-container">
+                <div className="login-card">
+                    <div className="login-header">
+                        <h2>Login</h2>
+                    </div>
+                    <form onSubmit={formik.handleSubmit} className='login-form'>
+                        <div className='form-group'>
+                            <label htmlFor="username">Username:</label>
+                            <input
+                                type="text"
+                                name="username"
+                                className='form-input'
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.username}
+                                required
+                            />
+                            {formik.touched.username && formik.errors.username ? (
+                                <p className='error-msg'>{formik.errors.username}</p>
+                            ) : null}
+                        </div>
+                        <div className='form-group'>
+                            <label htmlFor="password">Password:</label>
+                            <input
+                                type="password"
+                                name="password"
+                                className='form-input'
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.password}
+                                required
+                            />
+                            {formik.touched.password && formik.errors.password ? (
+                                <p className='error-msg'>{formik.errors.password}</p>
+                            ) : null}
+                        </div>
+                        <button type="submit" className='login-btn'>Login</button>
+                    </form>
                 </div>
-                <div>
-                    <label htmlFor="password">Password:</label>
-                    <input
-                        type="password"
-                        name="password"
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        value={formik.values.password}
-                    />
-                    {formik.touched.password && formik.errors.password ? (
-                        <div>{formik.errors.password}</div>
-                    ) : null}
-                </div>
-                <button type="submit" className='login-btn'>Login</button>
-            </form>
-        </div>
+            </div>
+        </section>
     )
 }
 

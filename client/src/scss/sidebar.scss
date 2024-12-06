@@ -26,15 +26,15 @@
 
     &-link {
         font-size: $h2-font-size;
-        color: var(--title-color);
-        font-weight: var(--font-bold);
+        color: $title-color;
+        font-weight: $font-bold;
+        border-radius: 50%;
         transition: 0.3s ease;
-        
+
         &:hover {
-            color: hsl(43, 100%, 68%);
+            color: $hover-color;
         }
     }
-
 }
 
 .copyright {
