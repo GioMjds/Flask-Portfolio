@@ -22,7 +22,7 @@ const Sidebar = () => {
     return (
         <>
             <aside className={toggle ? "aside show-menu" : "aside"}>
-                <NavLink to='/' onClick={() => handleNav('home')} >
+                <NavLink to='/home' onClick={() => handleNav('home')} >
                     <h1 className='logo-name'>G</h1>
                 </NavLink>
 
@@ -30,7 +30,7 @@ const Sidebar = () => {
                     <div className="nav-menu">
                         <ul className="nav-list">
                             <li className="nav-item">
-                                <NavLink to="/" className="nav-link" onClick={() => handleNav('home')}>
+                                <NavLink to="/home" className="nav-link" onClick={() => handleNav('home')}>
                                     <i className="icon-home"></i>
                                 </NavLink>
                             </li>
@@ -50,7 +50,7 @@ const Sidebar = () => {
                                 </NavLink>
                             </li>
                             <li className="nav-item">
-                                <NavLink to="/portfolio" className="nav-link" onClick={() => handleNav('portfolio')}>
+                                <NavLink to="/projects" className="nav-link" onClick={() => handleNav('projects')}>
                                     <i className="icon-layers"></i>
                                 </NavLink>
                             </li>

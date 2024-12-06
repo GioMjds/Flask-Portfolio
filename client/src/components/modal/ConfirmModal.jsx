@@ -3,7 +3,7 @@ import { motion } from "framer-motion"
 import { useEffect } from "react";
 import '../../scss/modal.scss';
 
-const ConfirmModal = ({ onConfirm, onClose }) => {
+const ConfirmModal = ({ onConfirm, onClose, prompt }) => {
     useEffect(() => {
         document.body.style.overflow = 'hidden';
 
@@ -34,7 +34,7 @@ const ConfirmModal = ({ onConfirm, onClose }) => {
             animate={{ scale: 1 }}
             exit={{ scale: 0.8 }}
         >
-            <h2>Are you sure you want to log out?</h2>
+            <h2>{prompt}</h2>
             <div className="modal-buttons">
                 <motion.button
                     className="modal-confirm"

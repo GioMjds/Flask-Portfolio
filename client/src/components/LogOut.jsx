@@ -1,16 +1,38 @@
-import { useState } from "react"
-import { useAuth } from "../contexts/AuthContext"
-import ConfirmModal from "./modal/ConfirmModal"
+import { useState } from "react";
+import ConfirmModal from "./modal/ConfirmModal";
+import { useNavigate } from "react-router-dom";
+import { useMyContext } from "../contexts/MyContext";
 
 const LogOut = () => {
-    const { logout } = useAuth();
     const [showLogoutModal, setShowLogoutModal] = useState(false);
     const openModal = () => setShowLogoutModal(true);
     const closeModal = () => setShowLogoutModal(false);
+    const { setIsAuthenticated } = useMyContext();
+
+    const navigate = useNavigate();
 
     const handleLogout = () => {
-        logout();
-        closeModal();
+        logOut();
+    }
+
+    const logOut = async () => {
+        try {
+            const response = await fetch('http://127.0.0.1:5000/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({}),
+                credentials: 'include',
+            })
+            if (response.ok) {
+                localStorage.removeItem('session_id');
+                setIsAuthenticated(false);
+                navigate('/login');
+            }
+        } catch (e) {
+            alert(`An error occurred during logout: ${e}`);
+        }
     }
 
     return (
@@ -27,6 +49,7 @@ const LogOut = () => {
                 <ConfirmModal
                     onClose={closeModal}
                     onConfirm={handleLogout}
+                    prompt={'Are you sure you want to log out?'}
                 />
             )}
         </>

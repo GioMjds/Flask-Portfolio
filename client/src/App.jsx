@@ -1,18 +1,19 @@
 /* eslint-disable react/prop-types */
 import AOS from "aos"
-import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { useEffect } from "react"
 import { useMediaQuery } from "react-responsive"
 import './App.scss'
-import About from "./sections/About"
-import Home from "./sections/Home"
 import Sidebar from "./components/Sidebar"
-import Resume from "./sections/Resume"
-import Portfolio from "./sections/Portfolio"
-import Contact from "./sections/Contact"
+import { MyProvider, useMyContext } from "./contexts/MyContext"
+import ProtectedRoutes from "./contexts/ProtectedRoutes"
+import Login from "./pages/Login"
+import Profile from "./pages/Profile"
+import About from "./sections/About"
 import Certificates from "./sections/Certificates"
-import Login from "./pages/Login";
-import Profile from "./pages/Profile";
-import { AuthProvider, useAuth } from "./contexts/AuthContext"
+import Contact from "./sections/Contact"
+import Home from "./sections/Home"
+import Projects from "./sections/Projects"
+import Resume from "./sections/Resume"
 
 const App = () => {
   AOS.init({
@@ -25,31 +26,41 @@ const App = () => {
   const isMobile = useMediaQuery({ maxWidth: 768 });
 
   return (
-    <AuthProvider>
-      <BrowserRouter>
+    <MyProvider>
       <MainContent isDesktop={isDesktop} isTablet={isTablet} isMobile={isMobile} />
-      </BrowserRouter>
-    </AuthProvider>
+    </MyProvider>
   )
 }
 
 const MainContent = ({ isDesktop, isTablet, isMobile }) => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, setIsAuthenticated } = useMyContext();
+
+  useEffect(() => {
+    const session = localStorage.getItem('session_id');
+
+    if (session) {
+      setIsAuthenticated(true);
+    }
+  }, []);
 
   return (
     <>
       <main className={`main ${isMobile ? "mobile" : ""} ${isTablet ? "tablet" : ""} ${isDesktop ? "desktop" : ""}`}>
-      {isAuthenticated && <Sidebar />}
-        <Routes>
-          <Route path="/" element={isAuthenticated ? <Home id="home" /> : <Login />} />
-          <Route path="/about" element={isAuthenticated ? <About id="about" /> : <Login />} />
-          <Route path="/resume" element={isAuthenticated ? <Resume id="resume" /> : <Login />} />
-          <Route path="/certificates" element={isAuthenticated ? <Certificates id="certificates" /> : <Login />} />
-          <Route path="/portfolio" element={isAuthenticated ? <Portfolio id="portfolio" /> : <Login />} />
-          <Route path="/contact" element={isAuthenticated ? <Contact id="contact" /> : <Login />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/login" element={<Login />} />
-        </Routes>
+        {isAuthenticated ? (
+          <>
+            <Sidebar />
+            <ProtectedRoutes isAuthenticated={isAuthenticated}>
+              <Home id="home" />
+              <About id="about" />
+              <Resume id="resume" />
+              <Certificates id="certificates" />
+              <Projects id="projects" />
+              <Contact id="contact" />
+            </ProtectedRoutes>
+          </>
+        ) : (
+          <Login />
+        )}
       </main>
     </>
   )

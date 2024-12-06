@@ -1,10 +1,10 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from "react";
-import "../scss/portfolio.scss";
 import Menu from '../components/Menu';
 import ModalBox from "../components/ModalBox";
+import "../scss/projects.scss";
 
-const Portfolio = () => {
+const Projects = () => {
   const [items, setItems] = useState(Menu);
   const [selectedProject, setSelectedProject] = useState(null);
 
@@ -21,14 +21,13 @@ const Portfolio = () => {
 
   return (
     <>
-      <section className="work container section" id='portfolio'>
-        <h2 className="section-title" data-aos="fade-right">Collection of Projects</h2>
+      <section className="work container section" id='projects'>
+        <h2 className="section-title" data-aos="fade-right">Python Activities</h2>
         <div className="work-filters">
           <span className="work-item" onClick={() => setItems(Menu)}>All</span>
-          <span className="work-item" onClick={() => filterItem("Python")}>Python</span>
-          <span className="work-item" onClick={() => filterItem("JavaScript")}>JavaScript</span>
-          <span className="work-item" onClick={() => filterItem("React")}>React</span>
-          <span className="work-item" onClick={() => filterItem("Design")}>Design</span>
+          <span className="work-item" onClick={() => filterItem("Python")}>Prelim</span>
+          <span className="work-item" onClick={() => filterItem("JavaScript")}>Midterm</span>
+          <span className="work-item" onClick={() => filterItem("React")}>Finals</span>
         </div>
         <div className="work-container grid">
           {items.length > 0 ? (
@@ -70,4 +69,4 @@ const Portfolio = () => {
   )
 }
 
-export default Portfolio
+export default Projects
