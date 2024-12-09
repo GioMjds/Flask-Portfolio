@@ -16,7 +16,7 @@ const Sidebar = () => {
     return (
         <>
             <aside className={toggle ? "aside show-menu" : "aside"}>
-                <Link to='/profile' >
+                <Link to='/' >
                     <h1 className='logo-name'>G</h1>
                 </Link>
 
@@ -39,8 +39,13 @@ const Sidebar = () => {
                                 </NavLink>
                             </li>
                             <li className="nav-item">
+                                <NavLink to="/users" className="nav-link">
+                                    <i className="fas fa-users"></i>
+                                </NavLink>
+                            </li>
+                            <li className="nav-item">
                                 <NavLink to="/profile" className="nav-link">
-                                    <i className="fas fa-user"></i>
+                                    <i className="fas fa-address-card"></i>
                                 </NavLink>
                             </li>
                             <li className="nav-item">
@@ -50,7 +55,6 @@ const Sidebar = () => {
                     </div>
                 </nav>
 
-                {/* Replace the LogOut component */}
                 <div className="nav-footer">
                     <span className="copyright">&copy; giomjds | {new Date().getFullYear()} </span>
                 </div>

@@ -12,6 +12,7 @@ import Login from "./pages/Login"
 import Profile from "./pages/Profile"
 import Projects from "./sections/Projects"
 import Certificates from "./sections/Certificates"
+import Users from "./pages/Users"
 
 const App = () => {
   AOS.init({
@@ -54,6 +55,7 @@ const MainContent = ({ isDesktop, isTablet, isMobile }) => {
                 <Route path="/" element={<Home />} />
                 <Route path="/blog" element={<Projects />} />
                 <Route path="/certificates" element={<Certificates />} />
+                <Route path="/users" element={<Users />} />
                 <Route path="/profile" element={<Profile />} />
               </Routes>
             </ProtectedRoutes>

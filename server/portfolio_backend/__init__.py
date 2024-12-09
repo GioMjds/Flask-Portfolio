@@ -7,6 +7,11 @@ def create_app():
     CORS(app, supports_credentials=True, origins=['http://localhost:5173'])
     
     from .auth.routes import auth_bp
-    app.register_blueprint(auth_bp)
+    from .profile.routes import profile_bp
+    from .users.routes import users_bp
     
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(profile_bp, url_prefix='/user-profile')
+    app.register_blueprint(users_bp)
+
     return app

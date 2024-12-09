@@ -1,4 +1,3 @@
-from flask import Flask
 from portfolio_backend import create_app
 
 app = create_app()

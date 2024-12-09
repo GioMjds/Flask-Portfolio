@@ -53,10 +53,11 @@
     .modal-buttons {
         display: flex;
         justify-content: space-evenly;
+        margin-top: 2rem;
 
         .modal-link {
             background: $hover-color;
-            color: $title-color;
+            color: darken($color: $title-color, $amount: 20%);
             border: none;
             border-radius: $border-radius;
             padding: 1rem;
@@ -102,6 +103,30 @@
             &:hover {
                 background-color: darken($color: $body-color, $amount: 60);
             }
+        }
+    }
+}
+
+// For table modal
+.profile-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    .table-data {
+        text-align: left;
+        font-size: $h3-font-size;
+    }
+    
+    td {
+        padding: 1rem;
+        border: 1px solid $text-color;
+    
+        input {
+            width: 100%;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
         }
     }
 }

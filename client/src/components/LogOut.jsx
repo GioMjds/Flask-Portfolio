@@ -50,6 +50,7 @@ const LogOut = () => {
                     onClose={closeModal}
                     onConfirm={handleLogout}
                     prompt='Are you sure you want to log out?'
+                    action='Log Out'
                 />
             )}
         </>

@@ -3,7 +3,7 @@ import { motion } from "framer-motion"
 import { useEffect } from "react";
 import '../../scss/modal.scss';
 
-const ConfirmModal = ({ onConfirm, onClose, prompt }) => {
+const ConfirmModal = ({ onConfirm, onClose, prompt, action }) => {
     useEffect(() => {
         document.body.style.overflow = 'hidden';
 
@@ -43,7 +43,7 @@ const ConfirmModal = ({ onConfirm, onClose, prompt }) => {
                     whileTap={{ scale: 0.95 }}
                     transition={{ type: "spring", stiffness: 300 }}
                 >
-                    Log Out
+                    {action}
                 </motion.button>
                 <motion.button
                     className="modal-cancel"

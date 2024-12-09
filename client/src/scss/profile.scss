@@ -1,0 +1,55 @@
+@use '../index.scss' as *;
+
+.profile {
+    .profile-form {
+        .form-group {
+            margin-bottom: 15px;
+            
+            .form-label {
+                display: block;
+                margin-bottom: 1rem;
+                font-weight: bold;
+            }
+
+            .form-input {
+                width: 100%;
+                padding: 10px;
+                border: none;
+                border-radius: 5px;
+                font-size: 16px;
+            }
+        }
+
+        .edit-buttons {
+            display: flex;
+            justify-content: space-around;
+
+            .btn {
+                padding: 1rem;
+                margin-top: 1rem;
+                cursor: pointer;
+            }
+        }
+    }
+
+    .error-msg {
+        color: red;
+        margin-bottom: 1rem;
+        font-size: $normal-font-size;
+    }
+
+    .edit-btn {
+        background: $hover-color;
+        color: darken($color: $title-color, $amount: 20%);
+        border: none;
+        border-radius: $border-radius;
+        margin-top: 1rem;
+        padding: 1rem;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &:hover {
+            background: mix($hover-color, black, 80%);
+        }
+    }
+}

@@ -53,8 +53,7 @@ export const validateBirthday = (birthday, age) => {
 
     const calculatedAge = currentDate.getFullYear() - birthdayDate.getFullYear();
 
-    const isBirthdayPastThisYear =
-        currentDate.getMonth() > birthdayDate.getMonth() ||
+    const isBirthdayPastThisYear = currentDate.getMonth() > birthdayDate.getMonth() ||
         (currentDate.getMonth() === birthdayDate.getMonth() && currentDate.getDate() >= birthdayDate.getDate());
 
     const finalCalculatedAge = isBirthdayPastThisYear ? calculatedAge : calculatedAge - 1;
