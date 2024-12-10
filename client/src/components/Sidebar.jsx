@@ -48,15 +48,12 @@ const Sidebar = () => {
                                     <i className="fas fa-address-card"></i>
                                 </NavLink>
                             </li>
-                            <li className="nav-item">
-                                <LogOut />
-                            </li>
                         </ul>
                     </div>
                 </nav>
 
                 <div className="nav-footer">
-                    <span className="copyright">&copy; giomjds | {new Date().getFullYear()} </span>
+                    <LogOut />
                 </div>
             </aside>
 

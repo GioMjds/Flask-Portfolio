@@ -1,6 +1,7 @@
 import axios from "axios";
+import { AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import EditProfileModal from "../components/modal/EditProfileModal";
+import UpdateModal from "../components/modal/UpdateModal";
 import '../scss/profile.scss';
 
 const Profile = () => {
@@ -59,11 +60,10 @@ const Profile = () => {
 
     const handleSave = async () => {
         try {
-            const response = await axios.post(`http://127.0.0.1:5000/user-profile/update`, formData, {
+            const response = await axios.post(`http://127.0.0.1:5000/user-profile/update_profile`, tempFormData, {
                 withCredentials: true,
             });
             if (response.status === 200) {
-                alert('Profile updated successfully');
                 fetchProfile();
             }
             setFormData(tempFormData);
@@ -85,7 +85,7 @@ const Profile = () => {
                         </tr>
                         <tr>
                             <td className="table-data">Middle Name</td>
-                            <td className="table-data">{formData.middle_name}</td>
+                            <td className="table-data">{formData.middle_name || 'N/A'}</td>
                         </tr>
                         <tr>
                             <td className="table-data">Last Name</td>
@@ -112,14 +112,17 @@ const Profile = () => {
                 <button onClick={() => setIsModalOpen(true)} className="edit-btn">
                     <i className="fas fa-edit"></i> Edit Profile
                 </button>
-                <EditProfileModal 
-                    isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
-                    formData={tempFormData}
-                    handleChange={handleChange}
-                    handleSave={handleSave}
-                />
             </div>
+            <AnimatePresence>
+                {isModalOpen && (
+                    <UpdateModal
+                        onClose={() => setIsModalOpen(false)}
+                        formData={tempFormData}
+                        handleChange={handleChange}
+                        handleSave={handleSave}
+                    />
+                )}
+            </AnimatePresence>
         </section>
     )
 }

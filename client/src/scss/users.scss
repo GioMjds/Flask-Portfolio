@@ -1,60 +1,10 @@
 @use "../index.scss" as *;
 
-// users.scss
-
 .users {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 2rem;
 
-    .user-form {
-        width: 100%;
-        max-width: 1600px;
-
-        .table-container {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            overflow: hidden;
-
-            .table-header,
-            .table-body {
-                display: flex;
-                flex-direction: column;
-                width: 100%;
-            }
-
-            .table-row {
-                display: flex;
-                width: 100%;
-
-            .table-cell {
-                flex: 1;
-                border: 1px solid $body-color;
-                text-align: center;
-
-                input {
-                    width: 100%;
-                    border: none;
-                    text-align: left;
-                    background: transparent;
-
-                        &:focus {
-                            outline: none;
-                        }
-                    }
-                }
-            }
-
-            .table-header {
-                background-color: $text-color;
-                color: #ffffff;
-
-                .table-cell {
-                    font-weight: bold;
-                }
-            }
-        }
-    }
+    
 }

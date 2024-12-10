@@ -1,27 +1,35 @@
-import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { AnimatePresence } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import ConfirmModal from '../components/modal/ConfirmModal';
+import CreateModal from '../components/modal/CreateModal';
+import UpdateModal from '../components/modal/UpdateModal';
 import '../scss/users.scss';
 
 const Users = () => {
   const [users, setUsers] = useState([]);
   const [formData, setFormData] = useState({
     id: '',
-    firstName: '',
-    middleName: '',
-    lastName: '',
+    first_name: '',
+    middle_name: '',
+    last_name: '',
     birthday: '',
-    age: '',
-    contactNumber: '',
+    age: 0,
+    contact_number: '',
     email: '',
-    username: '',
-    password: '',
   });
-  const [isEditing, setIsEditing] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [userIdToDelete, setUserIdToDelete] = useState(null);
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:5000/show_users');
+      const response = await axios.get('http://127.0.0.1:5000/users/show_users', {
+        withCredentials: true,
+      });
       setUsers(response.data.data);
+      console.table(response.data.data);
     } catch (error) {
       console.error('Error fetching users:', error);
     }
@@ -37,171 +45,151 @@ const Users = () => {
   };
 
   const handleEdit = (user) => {
-    setFormData(user);
-    setIsEditing(true);
+    setFormData({
+      id: user.id,
+      first_name: user.first_name,
+      middle_name: user.middle_name,
+      last_name: user.last_name,
+      birthday: user.birthday,
+      age: user.age,
+      contact_number: user.contact_number,
+      email: user.email
+    });
+    setIsModalOpen(true);
   };
 
   const handleDelete = async (id) => {
+    setUserIdToDelete(id);
+    setIsConfirmOpen(true);
+  };
+
+  const confirmDelete = async () => {
     try {
-      await axios.delete(`http://127.0.0.1:5000/delete_user/${id}`);
+      await axios.delete(`http://127.0.0.1:5000/users/delete_user/${userIdToDelete}`);
       fetchUsers();
-    } catch (error) {
-      console.error('Error deleting user:', error);
+      setIsConfirmOpen(false);
+    } catch (e) {
+      console.log(`Error deleting user: ${e}`)
+    }
+  }
+
+  const handleUpdateSubmit = async () => {
+    try {
+      const response = await axios.post(`http://127.0.0.1:5000/users/update_user/${formData.id}`,formData, {
+        withCredentials: true,
+      });
+      if (response.status === 200) {
+        fetchUsers();
+      }
+      resetForm();
+    } catch (e) {
+      console.log(`Error updating user: ${e}`);
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleCreateSubmit = async (e) => {
     e.preventDefault();
-    await axios.put(`http://127.0.0.1:5000/update_user/${formData.id}`, formData);
+    await axios.post('http://127.0.0.1:5000/users/add_user', formData);
     fetchUsers();
     resetForm();
-  };
+    setIsCreateModalOpen(false);
+  }
 
   const resetForm = () => {
     setFormData({
       id: '',
-      firstName: '',
-      middleName: '',
-      lastName: '',
+      first_name: '',
+      middle_name: '',
+      last_name: '',
       birthday: '',
-      age: '',
-      contactNumber: '',
+      age: 0,
+      contact_number: '',
       email: '',
-      username: '',
-      password: '',
     });
-    setIsEditing(false);
+    setIsModalOpen(false);
+    setIsCreateModalOpen(false);
   };
 
   return (
     <section className="users section">
       <h2 className='section-title'>List of Users</h2>
-      <form onSubmit={handleSubmit} className="user-form">
-        <input type="hidden" name="id" value={formData.id} />
-        <div className="table-container">
-          <div className="table-header">
-            <div className="table-row">
-              <div className="table-cell">First Name</div>
-              <div className="table-cell">Middle Name</div>
-              <div className="table-cell">Last Name</div>
-              <div className="table-cell">Birthday</div>
-              <div className="table-cell">Age</div>
-              <div className="table-cell">Contact Number</div>
-              <div className="table-cell">Email</div>
-              <div className="table-cell">Username</div>
-              <div className="table-cell">Password</div>
-              <div className="table-cell">Actions</div>
-            </div>
-          </div>
-          <div className="table-body">
-            {users.length > 0 ? (
-              users.map((user) => (
-                <div className="table-row" key={user.id}>
-                  <div className="table-cell">
-                    <input
-                      type="text"
-                      name="firstName"
-                      value={isEditing && formData.id === user.id ? formData.firstName : user.firstName}
-                      onChange={handleChange}
-                      disabled={!(isEditing && formData.id === user.id)}
-                    />
-                  </div>
-                  <div className="table-cell">
-                    <input
-                      type="text"
-                      name="middleName"
-                      value={isEditing && formData.id === user.id ? formData.middleName : user.middleName}
-                      onChange={handleChange}
-                      disabled={!(isEditing && formData.id === user.id)}
-                    />
-                  </div>
-                  <div className="table-cell">
-                    <input
-                      type="text"
-                      name="lastName"
-                      value={isEditing && formData.id === user.id ? formData.lastName : user.lastName}
-                      onChange={handleChange}
-                      disabled={!(isEditing && formData.id === user.id)}
-                    />
-                  </div>
-                  <div className="table-cell">
-                    <input
-                      type="date"
-                      name="birthday"
-                      value={isEditing && formData.id === user.id ? formData.birthday : user.birthday}
-                      onChange={handleChange}
-                      disabled={!(isEditing && formData.id === user.id)}
-                    />
-                  </div>
-                  <div className="table-cell">
-                    <input
-                      type="number"
-                      name="age"
-                      value={isEditing && formData.id === user.id ? formData.age : user.age}
-                      onChange={handleChange}
-                      disabled={!(isEditing && formData.id === user.id)}
-                    />
-                  </div>
-                  <div className="table-cell">
-                    <input
-                      type="text"
-                      name="contactNumber"
-                      value={isEditing && formData.id === user.id ? formData.contactNumber : user.contactNumber}
-                      onChange={handleChange}
-                      disabled={!(isEditing && formData.id === user.id)}
-                    />
-                  </div>
-                  <div className="table-cell">
-                    <input
-                      type="email"
-                      name="email"
-                      value={isEditing && formData.id === user.id ? formData.email : user.email}
-                      onChange={handleChange}
-                      disabled={!(isEditing && formData.id === user.id)}
-                    />
-                  </div>
-                  <div className="table-cell">
-                    <input
-                      type="text"
-                      name="username"
-                      value={isEditing && formData.id === user.id ? formData.username : user.username}
-                      onChange={handleChange}
-                      disabled={!(isEditing && formData.id === user.id)}
-                    />
-                  </div>
-                  <div className="table-cell">
-                    <input
-                      type={isEditing ? 'text': 'password'}
-                      name="password"
-                      value={isEditing && formData.id === user.id ? formData.password : user.password}
-                      onChange={handleChange}
-                      disabled={!(isEditing && formData.id === user.id)}
-                    />
-                  </div>
-                  <div className="table-cell">
-                    <button 
-                      type={isEditing ? 'submit' : 'button'}
-                      className='btn-edit'
-                      onClick={() => handleEdit(user)}
-                    >
-                      {isEditing && formData.id === user.id ? (
-                        <i className="fas fa-floppy-disk"></i>
-                      ) : (
-                        <i className="fas fa-edit"></i>
-                      )}
-                    </button>
-                    
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="table-row">
-                <div className="table-cell" colSpan="9">No users found</div>
-              </div>
-            )}
-          </div>
-        </div>
-      </form>
+      <table>
+        <thead>
+          <tr>
+            <th>First Name</th>
+            <th>Middle Name</th>
+            <th>Last Name</th>
+            <th>Birthday</th>
+            <th>Age</th>
+            <th>Contact Number</th>
+            <th>Email</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {users.length > 0 ? (
+            users.map((user) => (
+              <tr key={user.id}>
+                <td>{user.first_name}</td>
+                <td>{user.middle_name || 'N/A'}</td>
+                <td>{user.last_name}</td>
+                <td>{user.birthday}</td>
+                <td>{user.age}</td>
+                <td>{user.contact_number}</td>
+                <td>{user.email}</td>
+                <td>
+                  <button onClick={() => handleEdit(user)} className="edit-button">
+                    <i className="fas fa-edit"></i> Edit
+                  </button>
+                  <button onClick={() => handleDelete(user.id)} className="delete-button">
+                    <i className="fas fa-trash"></i> Delete
+                  </button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="8">No users found...</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+
+      <button
+        onClick={() => setIsCreateModalOpen(true)}
+        className="add-user-button btn"
+      >
+        <i className="fas fa-add"></i> Add User
+      </button>
+
+      <AnimatePresence>
+        {isModalOpen && (
+          <UpdateModal
+            onClose={resetForm}
+            formData={formData}
+            handleChange={handleChange}
+            handleSave={handleUpdateSubmit}
+          />
+        )}
+
+        {isCreateModalOpen && (
+          <CreateModal
+            onClose={() => setIsCreateModalOpen(false)}
+            onSubmit={handleCreateSubmit}
+            formData={formData}
+            handleChange={handleChange}
+          />
+        )}
+
+        {isConfirmOpen && (
+          <ConfirmModal
+            onConfirm={confirmDelete}
+            action='Delete User'
+            prompt='Are you sure you want to delete this user?'
+            onClose={() => setIsConfirmOpen(false)}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
 };

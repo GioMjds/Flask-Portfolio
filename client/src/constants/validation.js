@@ -94,13 +94,10 @@ export const validateContactNumber = (contactNumber) => {
 
 export const validateEmail = (email) => {
     const validProviders = ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'aol.com', 'icloud.com'];
-
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.(com|org|net|edu|gov|co|io|co\.uk)$/;
 
     if (!email) return "Email is required.";
-
     if (!emailRegex.test(email.trim())) return "Invalid email format. Please use a valid email provider.";
-
     const domain = email.split('@')[1];
     
     if (domain && !validProviders.includes(domain)) {

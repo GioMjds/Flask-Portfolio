@@ -10,12 +10,25 @@ import {
     validateContactNumber,
     validateEmail
 } from '../../constants/validation.js';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const EditProfileModal = ({ isOpen, onClose, formData, handleChange, handleSave }) => {
+const UpdateModal = ({ onClose, formData, handleChange, handleSave }) => {
     const [validationErrors, setValidationErrors] = useState({});
 
-    if (!isOpen) return null;
+    useEffect(() => {
+        document.body.style.overflow = 'hidden';
+
+        const handleEsc = e => {
+            if (e.key === 'Escape') onClose();
+        }
+
+        window.addEventListener('keydown', handleEsc);
+
+        return () => {
+            document.body.style.overflow = 'auto';
+            window.removeEventListener('keydown', handleEsc);
+        }
+    }, [onClose]);
 
     const handleValidation = () => {
         const errors = {};
@@ -54,7 +67,7 @@ const EditProfileModal = ({ isOpen, onClose, formData, handleChange, handleSave 
                 animate={{ scale: 1 }}
                 exit={{ scale: 0.8 }}
             >
-                <h2 className="section-title">Edit Profile</h2>
+                <h2>Edit Profile</h2>
                 <table className="profile-table">
                     <tbody>
                         <tr className="table-row">
@@ -153,6 +166,7 @@ const EditProfileModal = ({ isOpen, onClose, formData, handleChange, handleSave 
                 <div className="modal-buttons">
                     <motion.button
                         className="modal-confirm"
+                        style={{ backgroundColor: 'hsl(43, 100%, 45%)' }}
                         onClick={handleConfirm}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
@@ -175,4 +189,4 @@ const EditProfileModal = ({ isOpen, onClose, formData, handleChange, handleSave 
     )
 }
 
-export default EditProfileModal
+export default UpdateModal
