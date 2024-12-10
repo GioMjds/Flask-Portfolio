@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify, session, make_response
-import bcrypt
 from portfolio_backend.model import get_conn
+import bcrypt
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -16,19 +16,19 @@ def login():
     conn = get_conn()
     cursor = conn.cursor(dictionary=True)
     
-    cursor.execute('SELECT * FROM users WHERE username = %s AND password = %s', (username, password,))
+    cursor.execute('SELECT * FROM users WHERE username = %s', (username,))
     user = cursor.fetchone()
     
     if not user:
         return jsonify({'user': 'User not found'}), 404
 
-    if user:
-        session['session_id'] = user['id']
-        response = make_response(jsonify({'message': 'Login Successful'}), 200)
-        response.set_cookie('session_id', str(user['id']), httponly=True)
-        return jsonify({'message': 'Login Successful', 'session_id': user['id']}), 200
+    stored_hashed_password = user['password']
+    
+    if bcrypt.checkpw(password.encode('utf-8'), stored_hashed_password.encode('utf-8')):
+        session['session_id'] = user[0]
+        return jsonify({'success': 'Login Successful', 'session': session['session_id']}), 200
     else:
-        return jsonify({'message': 'Invalid Credentials'}), 401
+        return jsonify({'success': 'User has logout'}), 200
     
 @auth_bp.route('/logout', methods=['POST'])
 def logout():

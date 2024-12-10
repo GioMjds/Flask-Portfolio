@@ -5,7 +5,7 @@ profile_bp = Blueprint('profile_bp', __name__)
 
 @profile_bp.route('/profile', methods=['GET'])
 def profile():
-    user_id = 1
+    user_id = 2
     db = None
     cursor = None
     
@@ -41,7 +41,7 @@ def profile():
 @profile_bp.route('/update', methods=['POST'])
 def update():
     try:
-        id = 1
+        id = 2
         data = request.get_json()
         first_name = data.get('first_name')
         middle_name = data.get('middle_name')
