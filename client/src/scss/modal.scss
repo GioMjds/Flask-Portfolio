@@ -111,6 +111,10 @@
 .profile-table {
     width: 100%;
     border-collapse: collapse;
+    
+    .table-row {
+        padding: 0.5rem;
+    }
 
     .table-data {
         text-align: left;
@@ -128,5 +132,14 @@
             border-radius: 5px;
             font-size: 16px;
         }
+    }
+
+    .error {
+        color: hsl(0, 88%, 40%);
+        font-size: $smaller-font-size;
+    }
+
+    .table-data-modal {
+        text-align: left;
     }
 }

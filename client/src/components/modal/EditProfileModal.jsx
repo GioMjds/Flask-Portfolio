@@ -10,11 +10,34 @@ import {
     validateContactNumber,
     validateEmail
 } from '../../constants/validation.js';
+import { useState } from "react";
 
 const EditProfileModal = ({ isOpen, onClose, formData, handleChange, handleSave }) => {
+    const [validationErrors, setValidationErrors] = useState({});
+
     if (!isOpen) return null;
 
-    
+    const handleValidation = () => {
+        const errors = {};
+        errors.firstNameError = validateFirstName(formData.first_name)
+        errors.middleNameError = validateMiddleName(formData.middle_name)
+        errors.lastNameError = validateLastName(formData.last_name);
+        errors.birthdayError = validateBirthday(formData.birthday, formData.age);
+        errors.ageError = validateAge(formData.age);
+        errors.contactNumberError = validateContactNumber(formData.contact_number);
+        errors.emailError = validateEmail(formData.email);
+        return errors;
+    };
+
+    const handleConfirm = () => {
+        const errors = handleValidation();
+        setValidationErrors(errors);
+
+        if (Object.values(errors).every(error => !error)) {
+            handleSave();
+            onClose();
+        }
+    }
 
     return (
         <motion.div
@@ -34,8 +57,8 @@ const EditProfileModal = ({ isOpen, onClose, formData, handleChange, handleSave 
                 <h2 className="section-title">Edit Profile</h2>
                 <table className="profile-table">
                     <tbody>
-                        <tr>
-                            <td className="table-data">First Name</td>
+                        <tr className="table-row">
+                            <td className="table-data-modal">First Name</td>
                             <td>
                                 <input
                                     type="text"
@@ -44,10 +67,11 @@ const EditProfileModal = ({ isOpen, onClose, formData, handleChange, handleSave 
                                     onChange={handleChange}
                                     required
                                 />
+                                {validationErrors.firstNameError && <p className="error">{validationErrors.firstNameError}</p>}
                             </td>
                         </tr>
-                        <tr>
-                            <td className="table-data">Middle Name</td>
+                        <tr className="table-row">
+                            <td className="table-data-modal">Middle Name</td>
                             <td>
                                 <input
                                     type="text"
@@ -56,10 +80,11 @@ const EditProfileModal = ({ isOpen, onClose, formData, handleChange, handleSave 
                                     onChange={handleChange}
                                     required
                                 />
+                                {validationErrors.middleNameError && <p className="error">{validationErrors.middleNameError}</p>}
                             </td>
                         </tr>
-                        <tr>
-                            <td className="table-data">Last Name</td>
+                        <tr className="table-row">
+                            <td className="table-data-modal">Last Name</td>
                             <td>
                                 <input
                                     type="text"
@@ -68,10 +93,11 @@ const EditProfileModal = ({ isOpen, onClose, formData, handleChange, handleSave 
                                     onChange={handleChange}
                                     required
                                 />
+                                {validationErrors.lastNameError && <p className="error">{validationErrors.lastNameError}</p>}
                             </td>
                         </tr>
-                        <tr>
-                            <td className="table-data">Birthday</td>
+                        <tr className="table-row">
+                            <td className="table-data-modal">Birthday</td>
                             <td>
                                 <input
                                     type="date"
@@ -80,10 +106,11 @@ const EditProfileModal = ({ isOpen, onClose, formData, handleChange, handleSave 
                                     onChange={handleChange}
                                     required
                                 />
+                                {validationErrors.birthdayError && <p className="error">{validationErrors.birthdayError}</p>}
                             </td>
                         </tr>
-                        <tr>
-                            <td className="table-data">Age</td>
+                        <tr className="table-row">
+                            <td className="table-data-modal">Age</td>
                             <td>
                                 <input
                                     type="number"
@@ -92,10 +119,11 @@ const EditProfileModal = ({ isOpen, onClose, formData, handleChange, handleSave 
                                     onChange={handleChange}
                                     required
                                 />
+                                {validationErrors.ageError && <p className="error">{validationErrors.ageError}</p>}
                             </td>
                         </tr>
-                        <tr>
-                            <td className="table-data">Contact Number</td>
+                        <tr className="table-row">
+                            <td className="table-data-modal">Contact Number</td>
                             <td>
                                 <input
                                     type="text"
@@ -104,10 +132,11 @@ const EditProfileModal = ({ isOpen, onClose, formData, handleChange, handleSave 
                                     onChange={handleChange}
                                     required
                                 />
+                                {validationErrors.contactNumberError && <p className="error">{validationErrors.contactNumberError}</p>}
                             </td>
                         </tr>
-                        <tr>
-                            <td className="table-data">Email</td>
+                        <tr className="table-row">
+                            <td className="table-data-modal">Email</td>
                             <td>
                                 <input
                                     type="email"
@@ -116,6 +145,7 @@ const EditProfileModal = ({ isOpen, onClose, formData, handleChange, handleSave 
                                     onChange={handleChange}
                                     required
                                 />
+                                {validationErrors.emailError && <p className="error">{validationErrors.emailError}</p>}
                             </td>
                         </tr>
                     </tbody>
@@ -123,7 +153,7 @@ const EditProfileModal = ({ isOpen, onClose, formData, handleChange, handleSave 
                 <div className="modal-buttons">
                     <motion.button
                         className="modal-confirm"
-                        onClick={handleSave}
+                        onClick={handleConfirm}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         transition={{ type: "spring", stiffness: 300 }}

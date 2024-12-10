@@ -32,12 +32,6 @@
         }
     }
 
-    .error-msg {
-        color: red;
-        margin-bottom: 1rem;
-        font-size: $normal-font-size;
-    }
-
     .edit-btn {
         background: $hover-color;
         color: darken($color: $title-color, $amount: 20%);

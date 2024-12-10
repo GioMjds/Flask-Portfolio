@@ -5,7 +5,7 @@ import '../scss/profile.scss';
 
 const Profile = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isEditing, setIsEditing] = useState(false);
+    const [tempFormData, setTempFormData] = useState({});
     const [formData, setFormData] = useState({
         first_name: '',
         middle_name: '',
@@ -16,16 +16,6 @@ const Profile = () => {
         email: ''
     });
 
-    const [validationError, setValidationError] = useState({
-        firstnameError: '',
-        middlenameError: '',
-        lastnameError: '',
-        birthdayError: '',
-        ageError: '',
-        contactnumberErrror: '',
-        emailError: ''
-    });
-
     const fetchProfile = async () => {
         try {
             const response = await axios.get('http://127.0.0.1:5000/user-profile/profile', {
@@ -34,6 +24,15 @@ const Profile = () => {
             if (response.status === 200) {
                 const formattedBirthday = new Date(response.data.birthday).toISOString().split('T')[0];
                 setFormData({
+                    first_name: response.data.first_name,
+                    middle_name: response.data.middle_name,
+                    last_name: response.data.last_name,
+                    birthday: formattedBirthday,
+                    age: response.data.age,
+                    contact_number: response.data.contact_number,
+                    email: response.data.email.trim()
+                });
+                setTempFormData({
                     first_name: response.data.first_name,
                     middle_name: response.data.middle_name,
                     last_name: response.data.last_name,
@@ -55,7 +54,7 @@ const Profile = () => {
 
     const handleChange = e => {
         const { name, value } = e.target;
-        setFormData(prevData => ({ ...prevData, [name]: value }));
+        setTempFormData({ ...tempFormData, [name]: value });
     };
 
     const handleSave = async () => {
@@ -66,8 +65,9 @@ const Profile = () => {
             if (response.status === 200) {
                 alert('Profile updated successfully');
                 fetchProfile();
-                setIsEditing(false);
             }
+            setFormData(tempFormData);
+            setIsModalOpen(false);
         } catch (e) {
             console.log(`Error updating profile: ${e}`);
         }
@@ -115,7 +115,7 @@ const Profile = () => {
                 <EditProfileModal 
                     isOpen={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
-                    formData={formData}
+                    formData={tempFormData}
                     handleChange={handleChange}
                     handleSave={handleSave}
                 />
