@@ -3,27 +3,27 @@ from portfolio_backend.model import get_conn
 
 users_bp = Blueprint('users_bp', __name__)
 
-@users_bp.route('/add_user', methods=['GET'])
+@users_bp.route('/add_user', methods=['POST'])
 def create():
     data = request.get_json()
     id = data.get('id')
-    firstname = data.get('firstName')
-    middlename = data.get('middleName')
-    lastname = data.get('lastName')
+    first_name = data.get('first_name')
+    middle_name = data.get('middle_name')
+    last_name = data.get('last_name')
     age = data.get('age')
     birthday = data.get('birthday')
     email = data.get('email')
-    contactNumber = data.get('contactNumber')
-    
+    contact_number = data.get('contact_number')
+
     try:
         conn = get_conn()
         cursor = conn.cursor(dictionary=True)
         cursor.execute('SELECT * FROM users WHERE id = %s', (id,))
         user = cursor.fetchone()
-        
+
         if user:
             return jsonify({'message': 'User already exists'}), 400
-        cursor.execute('INSERT INTO users (firstName, middleName, lastName, age, birthday, email, contactNumber) VALUES (%s, %s, %s, %s, %s, %s, %s)', (firstname, middlename, lastname, age, birthday, email, contactNumber,))
+        cursor.execute('INSERT INTO users (firstName, middleName, lastName, age, birthday, email, contactNumber) VALUES (%s, %s, %s, %s, %s, %s, %s)', (first_name, middle_name, last_name, age, birthday, email, contact_number,))
         conn.commit()
         return jsonify({'success': 'User added'}), 200
     except Exception as e:
@@ -42,16 +42,16 @@ def read():
         cursor = conn.cursor(dictionary=True)
         cursor.execute("SELECT * FROM users")
         rows = cursor.fetchall()
-        
+
         users = [
             {
                 "id": row['id'],
-                "firstName": row['firstName'],
-                "middleName": row['middleName'],
-                "lastName": row['lastName'],
+                "first_name": row['firstName'],
+                "middle_name": row['middleName'],
+                "last_name": row['lastName'],
                 "birthday": row['birthday'].isoformat() if row['birthday'] else None,
                 "age": row['age'],
-                "contactNumber": row['contactNumber'],
+                "contact_number": row['contactNumber'],
                 "email": row['email'],
                 "username": row['username'],
                 "password": row['password'],
@@ -67,22 +67,22 @@ def read():
         if conn:
             conn.close()
             
-@users_bp.route('/update_user/<int:id>', methods=['PUT'])
+@users_bp.route('/update_user/<int:id>', methods=['POST]'])
 def update(id):
     try:
         data = request.get_json()
-        firstName = data.get('firstName')
-        middleName = data.get('middleName')
-        lastName = data.get('lastName')
-        age = data.get('age')
+        first_name = data.get('first_name')
+        middle_name = data.get('middle_name')
+        last_name = data.get('last_name')
         birthday = data.get('birthday')
+        age = data.get('age')
+        contact_number = data.get('contact_number')
         email = data.get('email')
-        contactNumber = data.get('contactNumber')
         
-        if not all([firstName, middleName, lastName, age, birthday, email, contactNumber]):
+        if not all([first_name, middle_name, last_name, age, birthday, email, contact_number]):
             return jsonify({'message': 'Missing required fields'}), 400
         conn = get_conn()
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor()
         cursor.execute("SELECT * FROM users WHERE id = %s", (id,))
         current_data = cursor.fetchone()
         
@@ -98,19 +98,23 @@ def update(id):
                 return jsonify({'message': 'User already exists'}), 400
 
         if current_data and (
-            firstName == current_data['firstName'] and
-            middleName == current_data['middleName'] and
-            lastName == current_data['lastName'] and
-            birthday == current_data['birthday'] and
-            age == current_data['age'] and
-            contactNumber == current_data['contactNumber'] and
-            email == current_data['email']
+            first_name == current_data[1] and
+            middle_name == current_data[2] and
+            last_name == current_data[3] and
+            birthday == current_data[4] and
+            age == current_data[5] and
+            contact_number == current_data[6] and
+            email == current_data[7]
         ):
-            return jsonify({'message': 'No changes detected'}), 200
+            return jsonify({'message': 'No changes detected'}), 400
         
         cursor.execute("""
-            UPDATE users SET firstName = %s, middleName = %s,lastName = %s, age = %s, birthday = %s, email = %s, contactNumber = %s WHERE id = %s
-        """, (firstName, middleName, lastName, age, birthday, email, contactNumber, id))
+            UPDATE users 
+            SET firstName = %s, middleName = %s,lastName = %s, birthday = %s, age = %s, email = %s, contactNumber = %s 
+            WHERE id = %s
+        """, (first_name, middle_name, last_name, age, birthday, email, contact_number, id))
+        conn.commit()
+        
         print(f"Rows updated: {cursor.rowcount}")
         
         if cursor.rowcount > 0:

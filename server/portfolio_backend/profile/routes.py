@@ -38,7 +38,7 @@ def profile():
         if db:
             db.close()
 
-@profile_bp.route('/update', methods=['POST'])
+@profile_bp.route('/update_profile', methods=['POST'])
 def update():
     try:
         id = 2
