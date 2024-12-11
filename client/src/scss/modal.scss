@@ -105,9 +105,42 @@
             }
         }
     }
+
+    .add-user-form {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+
+        .add-form-label {
+            font-size: $normal-font-size;
+            margin-bottom: 0.5rem;
+            text-align: left;
+        }
+
+        .add-form-input {
+            padding: 0.5rem;
+            border: 1px solid $text-color;
+            border-radius: 5px;
+            font-size: $normal-font-size;
+            margin-bottom: 1rem;
+        }
+
+        .modal-buttons {
+            .modal-confirm {
+                background-color: $hover-color;
+                padding: 1rem;
+                border-radius: $border-radius;
+                color: $container-color;
+    
+                &:hover {
+                    background-color: darken($color: $hover-color, $amount: 10%);
+                }
+            }
+        }
+    }
 }
 
-// For table modal
+// For edit profile page
 .profile-table {
     width: 100%;
     border-collapse: collapse;
@@ -143,3 +176,5 @@
         text-align: left;
     }
 }
+
+// For Add User Modal

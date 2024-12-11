@@ -1,9 +1,24 @@
 export const validateFirstName = (firstName) => {
-  // Regex to enforce proper capitalization and no invalid characters (only letters and spaces)
-  const regex = /^[A-Z][a-z]*([ ]([A-Z][a-z]*))*$/;
-  const invalidCharsRegex = /[^A-Za-z\s]/; // Checks for any special characters or numbers
-  const repeatedCharRegex = /(.)\1{2,}/;
+  const regex = /^[A-Z][a-z]*([ ]([A-Z][a-z]*))*$/; // Proper capitalization rule
+  const invalidCharsRegex = /[^A-Za-z\s]/; // Checks for special characters or numbers
+  const repeatedCharRegex = /(.)\1{2,}/; // Checks for repeated characters
   const maxLength = 20;
+  const repeatedWordPattern = /^(\b\w+\b)(?:\s+\1){1}$/; // Regex to allow exactly two occurrences of the same word (e.g., "Jan Jan")
+
+  const randomCombinationRegex = /^[A-Za-z]+([ ]([A-Z][a-z]*))*$/;
+  const words = firstName.trim().split(/\s+/); // Splits by any whitespace
+
+  // If the name consists of a single word and the length of that word is greater than 10
+  if (words.length === 1 && firstName.length > 10) {
+    // Regex to prevent a single unstructured word (e.g., random characters, no spaces, too long)
+    const unstructuredRegex = /^[a-zA-Z]+$/; // Ensures only letters, no spaces, and no special characters
+    if (unstructuredRegex.test(firstName)) {
+      return "Name must not consist of a single unstructured word with more than 10 characters.";
+    }
+  }
+
+  // Prevent long sequences of characters that appear random
+  const randomSequenceRegex = /([a-zA-Z])\1{3,}/; // Looks for sequences of the same letter repeated more than 3 times
 
   // Check if the first name is empty
   if (!firstName) return "First name is required.";
@@ -16,15 +31,37 @@ export const validateFirstName = (firstName) => {
   if (!regex.test(firstName.trim()))
     return "Capitalization is allowed only at the start of each word in name";
 
+  // Check if the name length is within the valid range
   if (firstName.trim().length < 2)
     return "First name must be at least 2 characters long.";
   if (firstName.trim().length > maxLength)
     return `First name must be at most ${maxLength} characters long.`;
 
-  // Check for repeated characters made it stronger
   const lowerCaseName = firstName.trim().toLowerCase();
+
+  // Check for random 2- or 3-letter combinations, but allow the first word to be random
+  if (randomCombinationRegex.test(firstName.trim())) {
+    // No need to check for random combinations after the first word
+  } else {
+    return "First name must not contain random two letter combinations";
+  }
+
+  // Check for long sequences of the same character (e.g., "aaaa")
+  if (randomSequenceRegex.test(firstName.trim())) {
+    return "First name must not contain long sequences of the same character.";
+  }
+
+  // Check for repeated characters
   if (repeatedCharRegex.test(lowerCaseName))
     return "First name must not contain repeated characters.";
+
+  // Check for exactly two repeated words (e.g., "Jan Jan")
+  if (repeatedWordPattern.test(firstName.trim())) return ""; // Allow repeated valid names (e.g., "Jan Jan")
+
+  // Check for other invalid duplicated patterns (three or more repetitions)
+  const threeOrMoreRepeatsPattern = /(\b\w+\b)(?:\s+\1){2,}/; // Three or more occurrences
+  if (threeOrMoreRepeatsPattern.test(firstName.trim()))
+    return "First name must not contain duplicated patterns";
 
   return "";
 };
@@ -34,6 +71,18 @@ export const validateMiddleName = (middleName) => {
   const invalidCharsRegex = /[^A-Za-z\s]/;
   const repeatedCharRegex = /(.)\1{2,}/;
   const maxLength = 20;
+  const repeatedWordPattern = /^(\b\w+\b)(?:\s+\1){1}$/;
+
+  const words = middleName.trim().split(/\s+/);
+
+  if (words.length === 1 && middleName.length > 10) {
+    const unstructuredRegex = /^[a-zA-Z]+$/;
+    if (unstructuredRegex.test(middleName)) {
+      return "Middle name must not consist of a single unstructured word with more than 10 characters.";
+    }
+  }
+
+  const randomSequenceRegex = /([a-zA-Z])\1{3,}/;
 
   if (!middleName) return "Middle name is required.";
 
@@ -49,8 +98,19 @@ export const validateMiddleName = (middleName) => {
     return `Middle name must be at most ${maxLength} characters long.`;
 
   const lowerCaseName = middleName.trim().toLowerCase();
+
+  if (randomSequenceRegex.test(middleName.trim())) {
+    return "Middle name must not contain long sequences of the same character.";
+  }
+
   if (repeatedCharRegex.test(lowerCaseName))
     return "Middle name must not contain repeated characters.";
+
+  if (repeatedWordPattern.test(middleName.trim())) return "";
+
+  const threeOrMoreRepeatsPattern = /(\b\w+\b)(?:\s+\1){2,}/;
+  if (threeOrMoreRepeatsPattern.test(middleName.trim()))
+    return "Middle name must not contain duplicated patterns";
 
   return "";
 };
@@ -59,7 +119,18 @@ export const validateLastName = (lastName) => {
   const regex = /^[A-Z][a-z]*([ ]([A-Z][a-z]*))*$/;
   const invalidCharsRegex = /[^A-Za-z\s]/;
   const repeatedCharRegex = /(.)\1{2,}/;
-  const maxLength = 30;
+  const maxLength = 20;
+  const repeatedWordPattern = /^(\b\w+\b)(?:\s+\1){1}$/;
+  const words = lastName.trim().split(/\s+/);
+
+  if (words.length === 1 && lastName.length > 10) {
+    const unstructuredRegex = /^[a-zA-Z]+$/;
+    if (unstructuredRegex.test(lastName)) {
+      return "Last name must not consist of a single unstructured word with more than 10 characters.";
+    }
+  }
+
+  const randomSequenceRegex = /([a-zA-Z])\1{3,}/;
 
   if (!lastName) return "Last name is required.";
 
@@ -75,11 +146,19 @@ export const validateLastName = (lastName) => {
     return `Last name must be at most ${maxLength} characters long.`;
 
   const lowerCaseName = lastName.trim().toLowerCase();
-  if (repeatedCharRegex.test(lowerCaseName))
-    return "Last name must not contain repeated characters.";
-
+  
+  if (randomSequenceRegex.test(lastName.trim())) return "Last name must not contain long sequences of the same character.";
+  
+  if (repeatedCharRegex.test(lowerCaseName)) return "Last name must not contain repeated characters.";
+  
+  if (repeatedWordPattern.test(lastName.trim())) return "";
+  
+  const threeOrMoreRepeatsPattern = /(\b\w+\b)(?:\s+\1){2,}/;
+  if (threeOrMoreRepeatsPattern.test(lastName.trim()))
+    return "Last name must not contain duplicated patterns";
+  
   return "";
-};
+}
 
 export const validateBirthday = (birthday, age) => {
   if (!birthday) return "Birthday is required.";
@@ -88,7 +167,6 @@ export const validateBirthday = (birthday, age) => {
 
   const currentDate = new Date();
 
-  // Minimum age for validation: 60 years
   const sixtyYearsAgo = new Date("1964-01-01");
 
   if (birthdayDate > currentDate) return "Birthday cannot be a future date.";
@@ -277,16 +355,12 @@ export const validateEmail = (email) => {
     "ust.edu.ph",
     "lu.edu.ph",
   ];
-  const domain = email.split("@")[1];
-  const localPart = email.split("@")[0];
-  const isStrictGovPh = validProviders.some((provider) =>
-    new RegExp(`^${provider}$`).test(domain)
-  );
 
   email = email.trim();
 
   if (!email) return "Email is required.";
 
+  const localPart = email.split("@")[0];
   if (localPart.length > 64) {
     return "The local part (before the '@') of the email address cannot exceed 64 characters.";
   }
@@ -297,6 +371,13 @@ export const validateEmail = (email) => {
   if (!emailRegex.test(email)) {
     return "Invalid email format. Please enter a valid email address.";
   }
+
+  const domain = email.split("@")[1];
+
+  // Strict validation to ensure no invalid trailing patterns after valid government email domains
+  const isStrictGovPh = validProviders.some((provider) =>
+    new RegExp(`^${provider}$`).test(domain)
+  );
 
   if (!isStrictGovPh) {
     return `Invalid email domain. ${domain} is not a recognized email provider.`;

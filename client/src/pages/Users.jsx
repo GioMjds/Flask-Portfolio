@@ -3,7 +3,7 @@ import { AnimatePresence } from 'framer-motion';
 import { useEffect, useState } from 'react';
 import ConfirmModal from '../components/modal/ConfirmModal';
 import CreateModal from '../components/modal/CreateModal';
-import UpdateModal from '../components/modal/UpdateModal';
+import UserUpdateModal from '../components/modal/UserUpdateModal';
 import '../scss/users.scss';
 
 const Users = () => {
@@ -18,7 +18,7 @@ const Users = () => {
     contact_number: '',
     email: '',
   });
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isUserUpdateModalOpen, setIsUserUpdateModalOpen] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [userIdToDelete, setUserIdToDelete] = useState(null);
@@ -45,17 +45,18 @@ const Users = () => {
   };
 
   const handleEdit = (user) => {
+    const formattedBirthday = new Date(user.birthday).toISOString().split('T')[0];
     setFormData({
       id: user.id,
-      first_name: user.first_name,
-      middle_name: user.middle_name,
-      last_name: user.last_name,
-      birthday: user.birthday,
-      age: user.age,
-      contact_number: user.contact_number,
-      email: user.email
+      first_name: user?.first_name,
+      middle_name: user?.middle_name || '',
+      last_name: user?.last_name,
+      birthday: formattedBirthday,
+      age: user?.age,
+      contact_number: user?.contact_number,
+      email: user?.email
     });
-    setIsModalOpen(true);
+    setIsUserUpdateModalOpen(true);
   };
 
   const handleDelete = async (id) => {
@@ -75,13 +76,32 @@ const Users = () => {
 
   const handleUpdateSubmit = async () => {
     try {
-      const response = await axios.post(`http://127.0.0.1:5000/users/update_user/${formData.id}`,formData, {
+      const response = await axios.post(`http://127.0.0.1:5000/users/update_user/${formData.id}`, {
+        first_name: formData.first_name,
+        middle_name: formData.middle_name,
+        last_name: formData.last_name,
+        birthday: formData.birthday,
+        age: formData.age,
+        contact_number: formData.contact_number,
+        email: formData.email
+      }, {
         withCredentials: true,
       });
       if (response.status === 200) {
         fetchUsers();
       }
+      setFormData({
+        id: '',
+        first_name: '',
+        middle_name: '',
+        last_name: '',
+        birthday: '',
+        age: 0,
+        contact_number: '',
+        email: '',
+      });
       resetForm();
+      setIsUserUpdateModalOpen(false);
     } catch (e) {
       console.log(`Error updating user: ${e}`);
     }
@@ -89,10 +109,18 @@ const Users = () => {
 
   const handleCreateSubmit = async (e) => {
     e.preventDefault();
-    await axios.post('http://127.0.0.1:5000/users/add_user', formData);
-    fetchUsers();
-    resetForm();
-    setIsCreateModalOpen(false);
+    try {
+      const formattedBirthday = new Date(formData.birthday).toISOString().split('T')[0];
+      await axios.post('http://127.0.0.1:5000/users/add_user', {
+        ...formData,
+        birthday: formattedBirthday
+      });
+      fetchUsers();
+      resetForm();
+      setIsCreateModalOpen(false);
+    } catch (e) {
+      console.log(`Error creating user: ${e}`);
+    }
   }
 
   const resetForm = () => {
@@ -106,38 +134,38 @@ const Users = () => {
       contact_number: '',
       email: '',
     });
-    setIsModalOpen(false);
     setIsCreateModalOpen(false);
+    setIsUserUpdateModalOpen(false);
   };
 
   return (
     <section className="users section">
-      <h2 className='section-title'>List of Users</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>First Name</th>
-            <th>Middle Name</th>
-            <th>Last Name</th>
-            <th>Birthday</th>
-            <th>Age</th>
-            <th>Contact Number</th>
-            <th>Email</th>
-            <th>Actions</th>
+      <h2 className='section-title' data-aos="fade-right">List of Users</h2>
+      <table className='table-container'>
+        <thead className='table-header'>
+          <tr className='table-row'>
+            <th className='table-cell'>First Name</th>
+            <th className='table-cell'>Middle Name</th>
+            <th className='table-cell'>Last Name</th>
+            <th className='table-cell'>Birthday</th>
+            <th className='table-cell'>Age</th>
+            <th className='table-cell'>Contact Number</th>
+            <th className='table-cell'>Email</th>
+            <th className='table-cell'>Actions</th>
           </tr>
         </thead>
         <tbody>
           {users.length > 0 ? (
             users.map((user) => (
-              <tr key={user.id}>
-                <td>{user.first_name}</td>
-                <td>{user.middle_name || 'N/A'}</td>
-                <td>{user.last_name}</td>
-                <td>{user.birthday}</td>
-                <td>{user.age}</td>
-                <td>{user.contact_number}</td>
-                <td>{user.email}</td>
-                <td>
+              <tr key={user.id} className='table-row'>
+                <td className='table-data'>{user.first_name}</td>
+                <td className='table-data'>{user.middle_name || 'N/A'}</td>
+                <td className='table-data'>{user.last_name}</td>
+                <td className='table-data'>{user.birthday}</td>
+                <td className='table-data'>{user.age}</td>
+                <td className='table-data'>{user.contact_number}</td>
+                <td className='table-data'>{user.email}</td>
+                <td className='table-data'>
                   <button onClick={() => handleEdit(user)} className="edit-button">
                     <i className="fas fa-edit"></i> Edit
                   </button>
@@ -149,7 +177,7 @@ const Users = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="8">No users found...</td>
+              <td colSpan="7">No users found...</td>
             </tr>
           )}
         </tbody>
@@ -157,18 +185,18 @@ const Users = () => {
 
       <button
         onClick={() => setIsCreateModalOpen(true)}
-        className="add-user-button btn"
+        className="add-user-button"
       >
-        <i className="fas fa-add"></i> Add User
+        <i className="fas fa-plus-circle"></i>  Add User
       </button>
 
       <AnimatePresence>
-        {isModalOpen && (
-          <UpdateModal
+        {isUserUpdateModalOpen && (
+          <UserUpdateModal
             onClose={resetForm}
             formData={formData}
-            handleChange={handleChange}
-            handleSave={handleUpdateSubmit}
+            onChange={handleChange}
+            onSubmit={handleUpdateSubmit}
           />
         )}
 

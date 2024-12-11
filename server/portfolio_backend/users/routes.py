@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from portfolio_backend.model import get_conn
+import mysql.connector
 
 users_bp = Blueprint('users_bp', __name__)
 
@@ -66,11 +67,14 @@ def read():
             cursor.close()
         if conn:
             conn.close()
-            
-@users_bp.route('/update_user/<int:id>', methods=['POST]'])
+
+@users_bp.route('/update_user/<int:id>', methods=['POST'])
 def update(id):
+    data = request.get_json()
+    conn = None
+    cursor = None
+
     try:
-        data = request.get_json()
         first_name = data.get('first_name')
         middle_name = data.get('middle_name')
         last_name = data.get('last_name')
@@ -78,24 +82,25 @@ def update(id):
         age = data.get('age')
         contact_number = data.get('contact_number')
         email = data.get('email')
-        
-        if not all([first_name, middle_name, last_name, age, birthday, email, contact_number]):
-            return jsonify({'message': 'Missing required fields'}), 400
+
+        if not all([first_name, middle_name, last_name, birthday, age, contact_number, email]):
+            return jsonify({'error': 'Missing required fields'}), 400
+
         conn = get_conn()
         cursor = conn.cursor()
         cursor.execute("SELECT * FROM users WHERE id = %s", (id,))
         current_data = cursor.fetchone()
-        
+
         if not current_data:
-            return jsonify({'message': 'User not found'}), 404
-        
-        current_id = current_data[0]
-        
-        if id != current_id:
-            cursor.execute("SELECT firstName, middleName, lastName, age, birthday, email, contactNumber FROM users WHERE id = %s", (id,))
-            user = cursor.fetchone()
-            if user:
-                return jsonify({'message': 'User already exists'}), 400
+            return jsonify({'error': 'User not found'}), 404
+
+        current_email = current_data[7]
+
+        if email != current_email:
+            cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
+            user_email = cursor.fetchone()
+            if user_email:
+                return jsonify({'email': f'Email {email} already exists'}), 400
 
         if current_data and (
             first_name == current_data[1] and
@@ -106,21 +111,21 @@ def update(id):
             contact_number == current_data[6] and
             email == current_data[7]
         ):
-            return jsonify({'message': 'No changes detected'}), 400
-        
+            return jsonify({'info': 'No changes detected'}), 200
+
         cursor.execute("""
-            UPDATE users 
-            SET firstName = %s, middleName = %s,lastName = %s, birthday = %s, age = %s, email = %s, contactNumber = %s 
+            UPDATE users
+            SET firstName = %s, middleName = %s, lastName = %s, birthday = %s, age = %s, contactNumber = %s, email = %s
             WHERE id = %s
-        """, (first_name, middle_name, last_name, age, birthday, email, contact_number, id))
+        """, (first_name, middle_name, last_name, birthday, age, contact_number, email, id,))
         conn.commit()
-        
-        print(f"Rows updated: {cursor.rowcount}")
-        
+
         if cursor.rowcount > 0:
-            return jsonify({'message': 'Profile updated'}), 200
+            return jsonify({'success': 'Profile updated'}), 200
         else:
-            return jsonify({'message': 'No changes detected'}), 200
+            return jsonify({'info': 'No changes detected'}), 200
+    except mysql.connector.IntegrityError as e:
+        return jsonify({'error': f'Error updating user: {str(e)}'}), 400
     except Exception as e:
         print(f"Error updating user: {str(e)}")
         return jsonify({'message': f'Error updating user: {str(e)}'}), 500

@@ -27,7 +27,7 @@ def profile():
             "contact_number": user[6],
             "email": user[7]            
         }
-        
+
         return jsonify(profile_data), 200
     except Exception as e:
         print(f"Error: {e}")
@@ -53,18 +53,18 @@ def update():
         
         if not all([first_name, last_name, birthday, age, contact_number, email]):
             return jsonify({'error': 'Missing required fields'}), 400
-        
+
         db = get_conn()
         cursor = db.cursor()
-        
+
         cursor.execute("SELECT * FROM users WHERE id = %s", (id,))
         current_data = cursor.fetchone()
-        
+
         if not current_data:
             return jsonify({'error': 'User not found'}), 404
-        
+
         current_email = current_data[7]
-        
+
         if email != current_email:
             cursor("SELECT * FROM users WHERE email = %s", (email,))
             user_email = cursor.fetchone()
@@ -81,16 +81,16 @@ def update():
             email == current_data[7]
         ):
             return jsonify({'error': 'No changes detected'}), 400
-        
+
         cursor.execute("""
             UPDATE users
             SET firstName = %s, middleName = %s, lastName = %s, birthday = %s, age = %s, contactNumber = %s, email = %s
             WHERE id = %s
-        """, (first_name, middle_name, last_name, birthday, age, contact_number, email, id))
+        """, (first_name, middle_name, last_name, birthday, age, contact_number, email, id,))
         db.commit()
-        
+
         print(f"Rows affected by update: {cursor.rowcount}")
-        
+
         if cursor.rowcount > 0:
             return jsonify({'message': 'Profile updated successfully'}), 200
         else:

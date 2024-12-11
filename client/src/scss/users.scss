@@ -6,5 +6,67 @@
     align-items: center;
     padding: 2rem;
 
+    .table-container {
+        width: 100%;
+        max-width: 1200px;
+        margin-bottom: 2rem;
+        border-collapse: collapse;
+
+        .table-row {
+            .table-cell {
+                background-color: $text-color;
+                color: $body-color;
+                font-size: $small-font-size;
+                padding: 0.5rem;
+            }
+        }
+    }
     
+    .table-data {
+        padding: 0.5rem;
+        text-align: center;
+        border-bottom: 1px solid $title-color;
+        font-size: $normal-font-size;
+        
+        .edit-button, .delete-button {
+            padding: 0.5rem 0.5rem;
+            font-size: $normal-font-size;
+            background: none;
+            margin: 0.5rem 0.7rem;
+            transition: background-color 0.3s;
+        }
+
+        .edit-button {
+            background-color: hsl(120, 74%, 37%);
+            border-radius: $border-radius;
+            color: $body-color;
+
+            &:hover {
+                background-color: darken($color: hsl(120, 74%, 37%), $amount: 20%);
+            }
+        }
+
+        .delete-button {
+            background-color: $first-color;
+            border-radius: $border-radius;
+            color: $body-color;
+
+            &:hover {
+                background-color: darken($color: $first-color, $amount: 20%);
+            }
+        }
+    }
+
+    .add-user-button {
+        background-color: $hover-color;
+        padding: 1rem;
+        border-radius: $border-radius;
+        color: $container-color;
+        transition: background-color 0.3s;
+        margin-bottom: 1rem;
+
+        &:hover {
+            background-color: darken($color: $hover-color, $amount: 10%);
+        }
+    }
 }

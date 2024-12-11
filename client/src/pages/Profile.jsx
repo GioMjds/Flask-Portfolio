@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import UpdateModal from "../components/modal/UpdateModal";
 import '../scss/profile.scss';
@@ -76,42 +76,48 @@ const Profile = () => {
     return (
         <section className="profile container section">
             <div className="profile-form">
-                <h2 className="section-title">My Profile</h2>
+                <h2 className="section-title" data-aos="fade-right">My Profile</h2>
                 <table className="profile-table">
                     <tbody>
                         <tr>
                             <td className="table-data">First Name</td>
-                            <td className="table-data">{formData.first_name}</td>
+                            <td className="table-data">{formData?.first_name}</td>
                         </tr>
                         <tr>
                             <td className="table-data">Middle Name</td>
-                            <td className="table-data">{formData.middle_name || 'N/A'}</td>
+                            <td className="table-data">{formData?.middle_name || 'N/A'}</td>
                         </tr>
                         <tr>
                             <td className="table-data">Last Name</td>
-                            <td className="table-data">{formData.last_name}</td>
+                            <td className="table-data">{formData?.last_name}</td>
                         </tr>
                         <tr>
                             <td className="table-data">Birthday</td>
-                            <td className="table-data">{formData.birthday}</td>
+                            <td className="table-data">{formData?.birthday}</td>
                         </tr>
                         <tr>
                             <td className="table-data">Age</td>
-                            <td className="table-data">{formData.age}</td>
+                            <td className="table-data">{formData?.age}</td>
                         </tr>
                         <tr>
                             <td className="table-data">Contact Number</td>
-                            <td className="table-data">{formData.contact_number}</td>
+                            <td className="table-data">{formData?.contact_number}</td>
                         </tr>
                         <tr>
                             <td className="table-data">Email</td>
-                            <td className="table-data">{formData.email}</td>
+                            <td className="table-data">{formData?.email}</td>
                         </tr>
                     </tbody>
                 </table>
-                <button onClick={() => setIsModalOpen(true)} className="edit-btn">
+                <motion.button 
+                    onClick={() => setIsModalOpen(true)} 
+                    className="edit-btn"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                >
                     <i className="fas fa-edit"></i> Edit Profile
-                </button>
+                </motion.button>
             </div>
             <AnimatePresence>
                 {isModalOpen && (
