@@ -19,17 +19,18 @@ def create():
     try:
         conn = get_conn()
         cursor = conn.cursor(dictionary=True)
-        cursor.execute('SELECT * FROM users WHERE id = %s', (id,))
-        user = cursor.fetchone()
+        
+        cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
+        existing_email = cursor.fetchone()
+        if existing_email:
+            return jsonify({'error': f'Email {email} already exists'}), 400
 
-        if user:
-            return jsonify({'message': 'User already exists'}), 400
         cursor.execute('INSERT INTO users (firstName, middleName, lastName, age, birthday, email, contactNumber) VALUES (%s, %s, %s, %s, %s, %s, %s)', (first_name, middle_name, last_name, age, birthday, email, contact_number,))
         conn.commit()
         return jsonify({'success': 'User added'}), 200
     except Exception as e:
         print(f"Error adding user: {str(e)}")
-        return jsonify({'message': f'Error adding user: {str(e)}'}), 500
+        return jsonify({'error': f'Error adding user: {str(e)}'}), 500
     finally:
         if cursor:
             cursor.close()
@@ -61,7 +62,7 @@ def read():
         ]
         return jsonify({"data": users}), 200
     except Exception as e:
-        return jsonify({'message': f'Error reading users: {str(e)}'}), 500
+        return jsonify({'error': f'Error reading users: {str(e)}'}), 500
     finally:
         if cursor:
             cursor.close()
@@ -94,14 +95,6 @@ def update(id):
         if not current_data:
             return jsonify({'error': 'User not found'}), 404
 
-        current_email = current_data[7]
-
-        if email != current_email:
-            cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
-            user_email = cursor.fetchone()
-            if user_email:
-                return jsonify({'email': f'Email {email} already exists'}), 400
-
         if current_data and (
             first_name == current_data[1] and
             middle_name == current_data[2] and
@@ -125,7 +118,7 @@ def update(id):
         else:
             return jsonify({'info': 'No changes detected'}), 200
     except mysql.connector.IntegrityError as e:
-        return jsonify({'error': f'Error updating user: {str(e)}'}), 400
+        return jsonify({'error': f'Email {email} already exists'}), 400
     except Exception as e:
         print(f"Error updating user: {str(e)}")
         return jsonify({'message': f'Error updating user: {str(e)}'}), 500

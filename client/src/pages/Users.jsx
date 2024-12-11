@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import ConfirmModal from '../components/modal/ConfirmModal';
 import CreateModal from '../components/modal/CreateModal';
 import UserUpdateModal from '../components/modal/UserUpdateModal';
+import Notification from '../components/Notification';
 import '../scss/users.scss';
 
 const Users = () => {
@@ -22,6 +23,11 @@ const Users = () => {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [userIdToDelete, setUserIdToDelete] = useState(null);
+  const [notification, setNotification] = useState({
+    message: '',
+    type: '',
+    visible: false
+  });
 
   const fetchUsers = async () => {
     try {
@@ -49,7 +55,7 @@ const Users = () => {
     setFormData({
       id: user.id,
       first_name: user?.first_name,
-      middle_name: user?.middle_name || '',
+      middle_name: user?.middle_name,
       last_name: user?.last_name,
       birthday: formattedBirthday,
       age: user?.age,
@@ -68,8 +74,10 @@ const Users = () => {
     try {
       await axios.delete(`http://127.0.0.1:5000/users/delete_user/${userIdToDelete}`);
       fetchUsers();
+      setNotification({ message: 'User deleted successfully!', type: 'success', visible: true });
       setIsConfirmOpen(false);
     } catch (e) {
+      setNotification({ message: 'Error deleting user!', type: 'error', visible: true });
       console.log(`Error deleting user: ${e}`)
     }
   }
@@ -89,6 +97,7 @@ const Users = () => {
       });
       if (response.status === 200) {
         fetchUsers();
+        setNotification({ message: 'User updated successfully!', type: 'success', visible: true });
       }
       setFormData({
         id: '',
@@ -104,22 +113,26 @@ const Users = () => {
       setIsUserUpdateModalOpen(false);
     } catch (e) {
       console.log(`Error updating user: ${e}`);
+      setNotification({ message: e.response?.data?.error || 'User not updated!', type: 'error', visible: true });
     }
   };
 
-  const handleCreateSubmit = async (e) => {
-    e.preventDefault();
+  const handleCreateSubmit = async () => {
     try {
       const formattedBirthday = new Date(formData.birthday).toISOString().split('T')[0];
-      await axios.post('http://127.0.0.1:5000/users/add_user', {
+      const response = await axios.post('http://127.0.0.1:5000/users/add_user', {
         ...formData,
         birthday: formattedBirthday
+      }, {
+        withCredentials: true,
       });
       fetchUsers();
       resetForm();
+      setNotification({ message: response.data.success, type: 'success', visible: true });
       setIsCreateModalOpen(false);
     } catch (e) {
       console.log(`Error creating user: ${e}`);
+      setNotification({ message: e.response?.data?.error || 'User not added!', type: 'error', visible: true });
     }
   }
 
@@ -139,7 +152,7 @@ const Users = () => {
   };
 
   return (
-    <section className="users section">
+    <section className="users container section">
       <h2 className='section-title' data-aos="fade-right">List of Users</h2>
       <table className='table-container'>
         <thead className='table-header'>
@@ -215,6 +228,14 @@ const Users = () => {
             action='Delete User'
             prompt='Are you sure you want to delete this user?'
             onClose={() => setIsConfirmOpen(false)}
+          />
+        )}
+
+        {notification.visible && (
+          <Notification 
+            message={notification.message}
+            type={notification.type}
+            onClose={() => setNotification({ message: '', type: '', visible: false })}
           />
         )}
       </AnimatePresence>

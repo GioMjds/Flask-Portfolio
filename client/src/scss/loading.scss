@@ -1,0 +1,7 @@
+@use '../index.scss' as *;
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

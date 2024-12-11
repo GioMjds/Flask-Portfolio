@@ -1,0 +1,33 @@
+@use '../index.scss' as *;
+
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 0.8rem;
+    border-radius: 3px;
+    background-color: #4caf50;
+    color: #fff;
+    box-shadow: $shadow;
+    z-index: 1000;
+    transition: background-color 0.3s;
+
+    &.error {
+        background-color: #f44336;
+    }
+
+    .notification-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .icon {
+            font-size: $h1-font-size;
+            margin-right: 1rem;
+        }
+
+        p {
+            font-size: $h3-font-size;
+        }
+    }
+}

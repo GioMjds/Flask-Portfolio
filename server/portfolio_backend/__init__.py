@@ -10,7 +10,7 @@ def create_app():
     from .profile.routes import profile_bp
     from .users.routes import users_bp
     
-    app.register_blueprint(auth_bp)
+    app.register_blueprint(auth_bp, url_prefix="/user-login")
     app.register_blueprint(profile_bp, url_prefix='/user-profile')
     app.register_blueprint(users_bp, url_prefix='/users')
 

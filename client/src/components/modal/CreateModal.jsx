@@ -86,7 +86,7 @@ const CreateModal = ({ onClose, onSubmit, formData, handleChange }) => {
             name="middle_name"
             placeholder="Middle Name"
             className='add-form-input'
-            value={formData.middle_name || 'N/A'}
+            value={formData.middle_name}
             onChange={handleChange}
           />
           {validationErrors.middleNameError && <p className="error">{validationErrors.middleNameError}</p>}

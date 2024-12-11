@@ -2,6 +2,7 @@ import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import UpdateModal from "../components/modal/UpdateModal";
+import Notification from "../components/Notification";
 import '../scss/profile.scss';
 
 const Profile = () => {
@@ -16,6 +17,10 @@ const Profile = () => {
         contact_number: '',
         email: ''
     });
+    const [notification, setNotification] = useState({
+        message: '',
+        type: '',
+    })
 
     const fetchProfile = async () => {
         try {
@@ -65,11 +70,13 @@ const Profile = () => {
             });
             if (response.status === 200) {
                 fetchProfile();
+                setNotification({ message: 'Profile updated successfully!', type: 'success' });
             }
             setFormData(tempFormData);
             setIsModalOpen(false);
         } catch (e) {
             console.log(`Error updating profile: ${e}`);
+            setNotification({ message: 'Error updating profile!', type: 'error' });
         }
     }
 
@@ -109,8 +116,8 @@ const Profile = () => {
                         </tr>
                     </tbody>
                 </table>
-                <motion.button 
-                    onClick={() => setIsModalOpen(true)} 
+                <motion.button
+                    onClick={() => setIsModalOpen(true)}
                     className="edit-btn"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -126,6 +133,13 @@ const Profile = () => {
                         formData={tempFormData}
                         handleChange={handleChange}
                         handleSave={handleSave}
+                    />
+                )}
+                {notification.message && (
+                    <Notification
+                        message={notification.message}
+                        type={notification.type}
+                        onClose={() => setNotification({ message: '', type: '' })}
                     />
                 )}
             </AnimatePresence>

@@ -2,11 +2,14 @@ import { useFormik } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { useMyContext } from '../contexts/MyContext';
+import { useState } from 'react';
+import Loading from '../components/Loading';
 import '../scss/login.scss';
 
 const Login = () => {
     const { setIsAuthenticated } = useMyContext();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
 
     const formik = useFormik({
         initialValues: {
@@ -23,8 +26,9 @@ const Login = () => {
                 .required('Password is required'),
         }),
         onSubmit: async (values) => {
+            setLoading(true);
             try {
-                const response = await fetch('http://127.0.0.1:5000/auth', {
+                const response = await fetch('http://127.0.0.1:5000/user-login/auth', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -44,6 +48,8 @@ const Login = () => {
             } catch (e) {
                 console.error(`Error during login: ${e}`);
                 alert('An error occurred during login');
+            } finally {
+                setLoading(false);
             }
         }
     });
@@ -85,7 +91,10 @@ const Login = () => {
                                 <p className='error-msg'>{formik.errors.password}</p>
                             ) : null}
                         </div>
-                        <button type="submit" className='login-btn'>Login</button>
+                        <button type="submit" className='login-btn' disabled={loading}>
+                            Login
+                        </button>
+                        {loading && <Loading />}
                     </form>
                 </div>
             </div>

@@ -25,7 +25,7 @@ def login():
     stored_hashed_password = user['password']
     
     if bcrypt.checkpw(password.encode('utf-8'), stored_hashed_password.encode('utf-8')):
-        session['session_id'] = user[0]
+        session['session_id'] = user['id']
         return jsonify({'success': 'Login Successful', 'session': session['session_id']}), 200
     else:
         return jsonify({'success': 'User has logout'}), 200
