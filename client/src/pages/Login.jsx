@@ -1,13 +1,14 @@
 import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import { useMyContext } from '../contexts/MyContext';
 import { useState } from 'react';
+import * as Yup from 'yup';
 import Loading from '../components/Loading';
+import { useMyContext } from '../contexts/MyContext';
 import '../scss/login.scss';
 
 const Login = () => {
     const { setIsAuthenticated } = useMyContext();
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     const formik = useFormik({
         initialValues: {
@@ -36,15 +37,19 @@ const Login = () => {
 
                 if (response.ok) {
                     const data = await response.json();
-                    localStorage.setItem('session_id', data.session_id);
-                    setIsAuthenticated(true);
+                    if (data.success === 'Login Successful') {
+                        localStorage.setItem('session_id', data.session_id);
+                        setIsAuthenticated(true);
+                    } else {
+                        setError(data.success);
+                    }
                 } else {
                     const error = await response.json();
-                    alert(error.message);
+                    setError(error.message);
                 }
             } catch (e) {
                 console.error(`Error during login: ${e}`);
-                alert('An error occurred during login');
+                setError('An error occured during login')
             } finally {
                 setLoading(false);
             }
@@ -91,6 +96,7 @@ const Login = () => {
                         <button type="submit" className='login-btn' disabled={loading}>
                             Login
                         </button>
+                        {error && <p className='error-msg'>{error}</p>}
                         {loading && <Loading />}
                     </form>
                 </div>

@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { motion } from "framer-motion";
 import '../scss/notification.scss';
-import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+import { FaCheckCircle, FaTimesCircle, FaTrash } from 'react-icons/fa';
 import { useEffect } from "react";
 
 const Notification = ({ message, type, onClose }) => {
@@ -22,11 +22,9 @@ const Notification = ({ message, type, onClose }) => {
             transition={{ duration: 0.3 }}
         >
             <div className="notification-content">
-                {type === 'success' ? (
-                    <FaCheckCircle className="icon" />
-                ) : (
-                    <FaTimesCircle className="icon" />
-                )}
+                {type === 'success' && <FaCheckCircle className="icon" /> }
+                {type === 'error' && <FaTimesCircle className="icon" />}
+                {type === 'deleted' && <FaTrash className="icon" /> }
                 <p>{message}</p>
             </div>
         </motion.div>

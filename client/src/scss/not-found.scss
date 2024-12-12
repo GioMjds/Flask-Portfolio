@@ -1,0 +1,15 @@
+@use '../index.scss' as *;
+
+.not-found {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: $body-color;
+
+    .section-description {
+        font-size: $h2-font-size;
+        padding: 1rem;
+    }
+}

@@ -74,7 +74,7 @@ const Users = () => {
     try {
       await axios.delete(`http://127.0.0.1:5000/users/delete_user/${userIdToDelete}`);
       fetchUsers();
-      setNotification({ message: 'User deleted successfully!', type: 'success', visible: true });
+      setNotification({ message: 'User successfully deleted!', type: 'deleted', visible: true });
       setIsConfirmOpen(false);
     } catch (e) {
       setNotification({ message: 'Error deleting user!', type: 'error', visible: true });
@@ -131,6 +131,7 @@ const Users = () => {
       setNotification({ message: response.data.success, type: 'success', visible: true });
       setIsCreateModalOpen(false);
     } catch (e) {
+      resetForm();
       console.log(`Error creating user: ${e}`);
       setNotification({ message: e.response?.data?.error || 'User not added!', type: 'error', visible: true });
     }

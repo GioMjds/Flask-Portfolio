@@ -13,7 +13,11 @@
     transition: background-color 0.3s;
 
     &.error {
-        background-color: #f44336;
+        background-color: hsl(4, 90%, 38%);
+    }
+
+    &.deleted {
+        background-color: hsl(4, 90%, 38%);
     }
 
     .notification-content {

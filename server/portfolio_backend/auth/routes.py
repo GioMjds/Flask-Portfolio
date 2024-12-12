@@ -28,7 +28,7 @@ def login():
         session['session_id'] = user['id']
         return jsonify({'success': 'Login Successful', 'session': session['session_id']}), 200
     else:
-        return jsonify({'success': 'User has logout'}), 200
+        return jsonify({'success': 'User has logout'}), 401
     
 @auth_bp.route('/logout', methods=['POST'])
 def logout():

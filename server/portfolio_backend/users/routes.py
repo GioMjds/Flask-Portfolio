@@ -26,7 +26,7 @@ def create():
 
         cursor.execute('INSERT INTO users (firstName, middleName, lastName, age, birthday, email, contactNumber) VALUES (%s, %s, %s, %s, %s, %s, %s)', (first_name, middle_name, last_name, age, birthday, email, contact_number,))
         conn.commit()
-        return jsonify({'success': 'User added'}), 200
+        return jsonify({'success': 'User successfully added'}), 200
     except Exception as e:
         print(f"Error adding user: {str(e)}")
         return jsonify({'error': f'Error adding user: {str(e)}'}), 500
@@ -141,7 +141,7 @@ def delete(id):
         cursor.execute("DELETE FROM users WHERE id = %s", (id,))
         conn.commit()
         
-        return jsonify({'message': 'User deleted'}), 200
+        return jsonify({'deleted': 'User successfully deleted!'}), 200
     except Exception as e:
         return jsonify({'message': f'Error deleting user: {str(e)}'}), 500
     finally:
