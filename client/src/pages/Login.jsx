@@ -1,5 +1,6 @@
 import { useFormik } from 'formik';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import Loading from '../components/Loading';
 import { useMyContext } from '../contexts/MyContext';
@@ -9,6 +10,8 @@ const Login = () => {
     const { setIsAuthenticated } = useMyContext();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+
+    const navigate = useNavigate();
 
     const formik = useFormik({
         initialValues: {
@@ -40,12 +43,13 @@ const Login = () => {
                     if (data.success === 'Login Successful') {
                         localStorage.setItem('session_id', data.session_id);
                         setIsAuthenticated(true);
+                        navigate('/');
+                        
                     } else {
                         setError(data.success);
                     }
                 } else {
-                    const error = await response.json();
-                    setError(error.message);
+                    setError('Wrong username or password');
                 }
             } catch (e) {
                 console.error(`Error during login: ${e}`);
