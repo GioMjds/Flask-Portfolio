@@ -169,10 +169,10 @@ const Users = () => {
         </thead>
         <tbody>
           {users.length > 0 ? (
-            users.map((user) => (
+            users.filter(user => user.id !== 2).map((user) => (
               <tr key={user.id} className='table-row'>
                 <td className='table-data'>{user.first_name}</td>
-                <td className='table-data'>{user.middle_name || 'N/A'}</td>
+                <td className='table-data'>{user.middle_name}</td>
                 <td className='table-data'>{user.last_name}</td>
                 <td className='table-data'>{user.birthday}</td>
                 <td className='table-data'>{user.age}</td>
@@ -190,7 +190,7 @@ const Users = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="7">No users found...</td>
+              <td colSpan={7}>No users found...</td>
             </tr>
           )}
         </tbody>
@@ -232,7 +232,7 @@ const Users = () => {
         )}
 
         {notification.visible && (
-          <Notification 
+          <Notification
             message={notification.message}
             type={notification.type}
             onClose={() => setNotification({ message: '', type: '', visible: false })}

@@ -7,7 +7,6 @@ users_bp = Blueprint('users_bp', __name__)
 @users_bp.route('/add_user', methods=['POST'])
 def create():
     data = request.get_json()
-    id = data.get('id')
     first_name = data.get('first_name')
     middle_name = data.get('middle_name')
     last_name = data.get('last_name')
