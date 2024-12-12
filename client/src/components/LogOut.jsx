@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ConfirmModal from "./modal/ConfirmModal";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useMyContext } from "../contexts/MyContext";
 
 const LogOut = () => {
@@ -8,8 +8,6 @@ const LogOut = () => {
     const openModal = () => setShowLogoutModal(true);
     const closeModal = () => setShowLogoutModal(false);
     const { setIsAuthenticated } = useMyContext();
-
-    const navigate = useNavigate();
 
     const handleLogout = () => {
         logOut();
@@ -28,7 +26,6 @@ const LogOut = () => {
             if (response.ok) {
                 localStorage.removeItem('session_id');
                 setIsAuthenticated(false);
-                navigate('/login');
             }
         } catch (e) {
             alert(`An error occurred during logout: ${e}`);

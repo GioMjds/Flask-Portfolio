@@ -1,5 +1,4 @@
 import { useFormik } from 'formik';
-import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { useMyContext } from '../contexts/MyContext';
 import { useState } from 'react';
@@ -8,7 +7,6 @@ import '../scss/login.scss';
 
 const Login = () => {
     const { setIsAuthenticated } = useMyContext();
-    const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
 
     const formik = useFormik({
@@ -40,7 +38,6 @@ const Login = () => {
                     const data = await response.json();
                     localStorage.setItem('session_id', data.session_id);
                     setIsAuthenticated(true);
-                    navigate('/');
                 } else {
                     const error = await response.json();
                     alert(error.message);
